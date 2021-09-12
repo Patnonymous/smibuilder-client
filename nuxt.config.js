@@ -49,7 +49,8 @@ export default {
 
   // Public environment variables
   publicRuntimeConfig: {
-    baseUrl: process.env.BASE_URL || "http://localhost:3000"
+    baseUrl: process.env.BASE_URL || "http://localhost:3000",
+    serverUrl: process.env.SERVER_URL || "http://localhost:3030"
   },
 
   // Private environment variables
