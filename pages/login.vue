@@ -1,7 +1,7 @@
 <template>
-  <div class="container bg-primary rounded">
+  <div class="container bg-secondary rounded">
     <div class="row justify-content-center">
-      <div class="col-auto">
+      <div class="col-8">
         <h4>You're currently a visitor. Log in to access more features.</h4>
         <form class="m-2 p-4" @submit.prevent="submitLogin">
           <div class="form-group">
@@ -17,7 +17,7 @@
               >We'll never share your email with anyone else.</small
             >
           </div>
-          <div class="form-group">
+          <div class="form-group mb-4">
             <label for="htmlUserInputPassword">Password</label>
             <input
               type="password"
@@ -27,6 +27,7 @@
               v-model="userInputPassword"
             />
           </div>
+          <NuxtLink to="/register">New user? Create Account</NuxtLink>
           <button type="submit" class="btn btn-success m-2 float-right">
             Log In
           </button>
@@ -49,10 +50,17 @@ export default {
   mounted: function () {},
   computed: {},
   methods: {
-    submitLogin: function () {
+    submitLogin: async function () {
       const TAG = "login - submitLogin(), ";
-      console.log("\n" + TAG + "userInputEmail: ", this.userInputEmail);
-      console.log(TAG + "userInputPassword: " + this.userInputPassword);
+
+      let loginResponse = await this.$axios.$post(
+        `${this.$config.serverUrl}/users`,
+        {
+          userName: this.userInputEmail,
+          password: this.userInputPassword,
+        }
+      );
+      console.log(TAG + "loginResponse: ", loginResponse);
     },
   },
 };
