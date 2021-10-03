@@ -89,6 +89,10 @@ export default {
   mounted: function () {},
   computed: {},
   methods: {
+    /**
+     * Registers a new account using the inputted info.
+     * Does basic error checking then does does a POST to the register api.
+     */
     submitRegisterNewAccount: async function () {
       const TAG = "register - submitRegisterNewAccount(), ";
       console.log(TAG + "starting.");
@@ -127,20 +131,26 @@ export default {
             password: userPassword,
           }
         );
+        console.log(TAG + "registrationResponse: ");
+        if (registrationResponse.status === "Success") {
+          this.$notify({
+            title: "Registration Successful.",
+          });
+        }
         console.log(registrationResponse);
       }
     },
-    submitLogin: async function () {
-      const TAG = "login - submitLogin(), ";
-
-      let loginResponse = await this.$axios.$post(
-        `${this.$config.serverUrl}/users`,
-        {
-          userName: this.userInputEmail,
-          password: this.userInputPassword,
-        }
-      );
-      console.log(TAG + "loginResponse: ", loginResponse);
+    /**
+     * Reset forms to their defaults.
+     */
+    resetForm: function () {
+      const TAG = "register - resetForm(), ";
+      console.log(TAG + "resetting.");
+      this.userInputEmail = "";
+      this.userInputUsername = "";
+      this.userInputPassword = "";
+      this.userInputConfirmPassword = "";
+      this.errorMessage = "";
     },
   },
 };
