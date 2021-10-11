@@ -76,6 +76,7 @@
 <script>
 export default {
   name: "register",
+  layout: "public",
   components: {},
   data: function () {
     return {
@@ -117,7 +118,7 @@ export default {
         this.errorMessage = "Trimmed username input was empty.";
       } else if (userPassword.length === 0 || confirmPassword.length === 0) {
         this.errorMessage =
-          "Trimmer password or confirmation password was empty.";
+          "Trimmed password or confirmation password was empty.";
       } else if (userPassword !== confirmPassword) {
         this.errorMessage =
           "The passwords do not match. Please ensure you enter the same password in each field.";
@@ -132,12 +133,25 @@ export default {
           }
         );
         console.log(TAG + "registrationResponse: ");
-        if (registrationResponse.status === "Success") {
-          this.$notify({
-            title: "Registration Successful.",
-          });
-        }
         console.log(registrationResponse);
+        if (registrationResponse.status === "Failure") {
+          this.errorMessage = registrationResponse.resData;
+          this.$notify({
+            title: "Registration Error",
+            text: "An error has occurred.",
+            duration: 6000,
+            type: "error",
+          });
+        } else if (registrationResponse.status === "Success") {
+          this.resetForm();
+          this.$notify({
+            title: "Registration",
+            text: "Registration was successful. You may now log in.",
+            duration: 6000,
+            type: "success",
+          });
+          this.$router.push({ path: "/login" });
+        }
       }
     },
     /**
