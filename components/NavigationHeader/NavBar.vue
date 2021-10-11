@@ -1,40 +1,40 @@
 <template>
   <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="#">Navbar</a>
-    <button
-      class="navbar-toggler"
-      type="button"
-      data-toggle="collapse"
-      data-target="#navbarSupportedContent"
-      aria-controls="navbarSupportedContent"
-      aria-expanded="false"
-      aria-label="Toggle navigation"
-    >
-      <span class="navbar-toggler-icon"></span>
-    </button>
-
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <div class="navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav mr-auto">
-        <li class="nav-item active">
-          <a class="nav-link" href="#"
-            >Home <span class="sr-only">(current)</span></a
+        <li class="nav-item">
+          <button
+            class="btn btn-outline-primary ml-4"
+            @click="changePage('/create/selector')"
           >
+            Create
+          </button>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">Link</a>
+          <button
+            class="btn btn-outline-primary ml-4"
+            @click="changePage('/builds/search')"
+          >
+            Builds
+          </button>
+        </li>
+        <li v-if="$store.state.user.authorized === true" class="nav-item">
+          <button
+            class="btn btn-outline-primary ml-4"
+            @click="changePage('/favourites')"
+          >
+            Favourites
+          </button>
         </li>
       </ul>
-      <form class="form-inline my-2 my-lg-0">
-        <input
-          class="form-control mr-sm-2"
-          type="search"
-          placeholder="Search"
-          aria-label="Search"
-        />
-        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">
-          Search
+      <div class="form-inline my-2 my-lg-0">
+        <button
+          class="btn btn-outline-primary ml-4"
+          @click="changePage('/login')"
+        >
+          Log In
         </button>
-      </form>
+      </div>
     </div>
   </nav>
 </template>
@@ -48,6 +48,14 @@ export default {
   },
   mounted: function () {},
   computed: {},
-  methods: {},
+  methods: {
+    changePage: function (pageRoute) {
+      const TAG = "NavBar - changePage(), ";
+      console.log(TAG + "The current route is: ");
+      console.log(this.$route);
+      console.log(TAG + "navigating to pageRoute: " + pageRoute);
+      this.$router.push({ path: pageRoute });
+    },
+  },
 };
 </script>
