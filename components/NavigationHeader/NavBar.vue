@@ -18,6 +18,14 @@
             Builds
           </button>
         </li>
+        <li v-if="$store.state.user.authorized === true" class="nav-item">
+          <button
+            class="btn btn-outline-primary ml-4"
+            @click="changePage('/favourites')"
+          >
+            Favourites
+          </button>
+        </li>
       </ul>
       <div class="form-inline my-2 my-lg-0">
         <button
