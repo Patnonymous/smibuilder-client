@@ -11,7 +11,7 @@
 <script>
 export default {
   name: "favourites",
-  middleware: "authenticated",
+  layout: "default",
   components: {},
   data: function () {
     return {};
