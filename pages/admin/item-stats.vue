@@ -1,16 +1,12 @@
 <template>
   <div class="container">
-    <div class="row">
-      <div class="col">
-        <h1>Favourites</h1>
-      </div>
-    </div>
+    <h1>Admin - Item stats</h1>
   </div>
 </template>
 
 <script>
 export default {
-  name: "favourites",
+  name: "item-stats",
   layout: "default",
   components: {},
   data: function () {

@@ -9,6 +9,7 @@
 <script>
 import NavBar from "../components/NavigationHeader/NavBar.vue";
 export default {
+  middleware: "relogin",
   components: {
     NavBar,
   },
