@@ -85,6 +85,7 @@ export default {
             password: userPassword,
           }
         );
+
         console.log(TAG + "loginResponse: ", loginResponse);
 
         if (loginResponse.status === "Failure") {
@@ -100,10 +101,11 @@ export default {
           this.$notify({
             title: "Login",
             text: "You are now logged in and authorized.",
-            duration: 6000,
+            duration: 3000,
             type: "success",
           });
-          this.$store.commit("user/setUser", loginResponse.resData);
+          localStorage.setItem("auth", loginResponse.resData.token);
+          this.$store.commit("user/setUser", loginResponse.resData.userObject);
           this.$router.push({ path: "/builds/search" });
         }
       }
