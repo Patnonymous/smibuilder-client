@@ -9,6 +9,7 @@
 <script>
 import NavBar from "../components/NavigationHeader/NavBar.vue";
 export default {
+  middleware: "authenticated",
   components: {
     NavBar,
   },
