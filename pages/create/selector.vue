@@ -12,24 +12,44 @@
         </div>
         <!-- Class filters -->
         <FilterPanel
-          filterGroup="Class"
+          filterGroup="godClass"
+          groupTitle="By Class"
+          ref="classFilterPanel"
           :arrayOfFilterStrings="arrayClassFilterStrings"
+          @filter-change="filterChanged"
         />
         <!-- Pantheon filters -->
         <FilterPanel
-          filterGroup="Pantheon"
+          filterGroup="pantheon"
+          groupTitle="By Pantheon"
+          ref="pantheonFilterPanel"
           :arrayOfFilterStrings="arrayPantheonFilterStrings"
+          @filter-change="filterChanged"
         />
         <!-- Damage type filters -->
         <FilterPanel
-          filterGroup="Damage Type"
+          filterGroup="damage"
+          groupTitle="By Damage Type"
+          ref="damageFilterPanel"
           :arrayOfFilterStrings="arrayDamageType"
+          @filter-change="filterChanged"
         />
         <!-- Basic attack type filters -->
         <FilterPanel
-          filterGroup="Basic Attack Type"
+          filterGroup="basic"
+          groupTitle="By Basic Attack Type"
+          ref="basicFilterPanel"
           :arrayOfFilterStrings="arrayBasicAttackType"
+          @filter-change="filterChanged"
         />
+
+        <div class="row justify-content-center">
+          <div class="col-auto">
+            <button class="btn btn-dark" type="button" @click="resetAllFilters">
+              Reset All
+            </button>
+          </div>
+        </div>
       </div>
 
       <!-- Second col is character section -->
@@ -52,7 +72,7 @@
             <!-- Each row is a chunk of arrayChunk. -->
             <div
               class="row m-3 border border-warning"
-              v-for="(chunk, index) in arrayChunks"
+              v-for="(chunk, index) in filteredGodsArray"
               :key="index"
             >
               <!-- Each of these col's is a item in chunk, in this case it's the characters. -->
@@ -96,6 +116,10 @@ export default {
     return {
       userSearchTerm: "",
       godsArray: [],
+      /**
+       * Todo later (maybe): actually pull these from the gods when loaded on mounted,
+       * instead of hardcoding them like this.
+       */
       arrayClassFilterStrings: [
         "Assassin",
         "Guardian",
@@ -123,8 +147,19 @@ export default {
       ],
       arrayDamageType: ["Magical", "Physical"],
       arrayBasicAttackType: ["Melee", "Ranged"],
+      currentlySelectedFilters: {
+        godClass: [],
+        pantheon: [],
+        damage: [],
+        basic: [],
+      },
     };
   },
+  /**
+   * @description Async mounted function. When mounted, show the loading bar then use the server API to get the list of gods.
+   * Failure displays an error, success saves the gods array.
+   * Both results hide the loading overlay when finished.
+   */
   mounted: async function () {
     const TAG = "\nselector.vue - mounted(), ";
     console.log(TAG + "loading all gods.");
@@ -159,8 +194,42 @@ export default {
     arrayChunks: function () {
       return this.lodash.chunk(this.godsArray, 7);
     },
+    filteredGodsArray: function () {
+      const SELF = this;
+      function showThisGod(god) {
+        if (SELF.currentlySelectedFilters.godClass.includes(god.Roles)) {
+          return true;
+        } else {
+          return false;
+        }
+      }
+      return this.lodash.chunk(this.godsArray.filter(showThisGod), 7);
+      //return this.godsArray.filter(showThisGod);
+    },
   },
-  methods: {},
+  methods: {
+    /**
+     * @description This function fires when any of the FilterPanels checkboxes change.
+     * If a filter is changed, update the appropriate array  in the currentlySelectedFilters object.
+     */
+    filterChanged: function (selectedFilters) {
+      const TAG = "\nselector - filterChanged(), ";
+      console.log(TAG + "fired.");
+      console.dir(selectedFilters);
+      this.currentlySelectedFilters[selectedFilters.filterGroup] =
+        selectedFilters.selectedFilters;
+      console.dir(this.currentlySelectedFilters);
+    },
+    /**
+     * @description Access the $refs and call their uncheckAllFilters function.
+     */
+    resetAllFilters: function () {
+      this.$refs.classFilterPanel.uncheckAllFilters();
+      this.$refs.pantheonFilterPanel.uncheckAllFilters();
+      this.$refs.damageFilterPanel.uncheckAllFilters();
+      this.$refs.basicFilterPanel.uncheckAllFilters();
+    },
+  },
 };
 </script>
 
