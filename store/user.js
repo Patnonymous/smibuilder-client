@@ -22,4 +22,4 @@ export const mutations = {
         console.log(state.authorized);
         console.log(state.currentUser);
     }
-}
+};
