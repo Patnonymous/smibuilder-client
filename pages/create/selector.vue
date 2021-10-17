@@ -61,7 +61,7 @@
               v-model="userSearchTerm"
               type="text"
               class="form-control"
-              placeholder="Search term..."
+              placeholder="Search by name..."
             />
           </div>
         </div>
@@ -137,7 +137,7 @@ export default {
         "Greek",
         "Hindu",
         "Japanese",
-        "Mayan",
+        "Maya",
         "Norse",
         "Polynesian",
         "Roman",
@@ -182,29 +182,108 @@ export default {
       loader.hide();
     } else if (allGodsResponse.status === "Success") {
       this.godsArray = allGodsResponse.resData;
-      console.dir(this.godsArray[0]);
+      console.log("God character object: ");
+      console.dir(this.godsArray[2]);
 
       loader.hide();
     }
   },
   computed: {
     /**
-     * @description Split the array of gods into chunks so row output is easier.
+     * @description Runs a filter on every god to determine if they should be displayed or not.
+     * @returns {Array} Chunked array.
      */
-    arrayChunks: function () {
-      return this.lodash.chunk(this.godsArray, 7);
-    },
     filteredGodsArray: function () {
       const SELF = this;
+      /**
+       * @description Function to be used in a filter. Determines whether or not a god should be displayed.
+       * First it handles the god. Type because in the api JSON data it's in the format of a single string. Ex. "Ranged, Magical"
+       * Split the type on ',', remove whitespace, split them further into a Basic Attack type array and a Damage type array.
+       *
+       * Second it checks against the filter panel settings.
+       * Third it checks against the search bar at the time.
+       */
       function showThisGod(god) {
-        if (SELF.currentlySelectedFilters.godClass.includes(god.Roles)) {
-          return true;
-        } else {
-          return false;
+        // Crazy ugly, but might account for god data changes, such as a new Basic Attack type.
+        const splitted = god.Type.replace(/\s/g, "").split(",");
+        let godBasicAttackTypes = [];
+        let godDamageTypes = [];
+        for (const indexInSplitted in splitted) {
+          if (
+            splitted[indexInSplitted] === "Ranged" ||
+            splitted[indexInSplitted] === "Melee"
+          ) {
+            godBasicAttackTypes.push(splitted[indexInSplitted]);
+          } else {
+            godDamageTypes.push(splitted[indexInSplitted]);
+          }
         }
+        if (
+          SELF.currentlySelectedFilters.godClass.length !== 0 &&
+          !SELF.currentlySelectedFilters.godClass.includes(god.Roles)
+        ) {
+          return false;
+        } else if (
+          SELF.currentlySelectedFilters.pantheon.length !== 0 &&
+          !SELF.currentlySelectedFilters.pantheon.includes(god.Pantheon)
+        ) {
+          return false;
+        } else if (SELF.currentlySelectedFilters.damage.length !== 0) {
+          /**
+           * Also ugly, but can account for a use case where a god has multiple damage types listed.
+           */
+          let index = 0;
+          let aLength = godDamageTypes.length;
+          while (index < aLength) {
+            if (
+              !SELF.currentlySelectedFilters.damage.includes(
+                godDamageTypes[index]
+              )
+            ) {
+              return false;
+            }
+            index++;
+          }
+        } else if (SELF.currentlySelectedFilters.basic.length !== 0) {
+          /**
+           * For some reason Persephone's basic attack type isn't specified in the api JSON.
+           * In the game her basic attacks are ranged so use a special check for that.
+           */
+          if (
+            god.Name === "Persephone" &&
+            !SELF.currentlySelectedFilters.basic.includes("Ranged")
+          ) {
+            return false;
+          } else {
+            /**
+             * Same thing as above, accounts for a god having multiple basic attack types.
+             */
+            let index = 0;
+            let aLength = godBasicAttackTypes.length;
+            while (index < aLength) {
+              if (
+                !SELF.currentlySelectedFilters.basic.includes(
+                  godBasicAttackTypes[index]
+                )
+              ) {
+                return false;
+              }
+              index++;
+            }
+          }
+        }
+
+        // Passed filter settings, now check against the search bar.
+        if (SELF.userSearchTerm.length !== 0) {
+          let regex = new RegExp(SELF.userSearchTerm, "gi");
+          if (!regex.test(god.Name)) {
+            return false;
+          }
+        }
+
+        return true;
       }
       return this.lodash.chunk(this.godsArray.filter(showThisGod), 7);
-      //return this.godsArray.filter(showThisGod);
     },
   },
   methods: {
