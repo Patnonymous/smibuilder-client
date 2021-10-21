@@ -81,6 +81,7 @@
                   :id="god.id"
                   :godName="god.Name"
                   :iconUrl="god.godIcon_URL"
+                  @click.native="godSelected(god.id)"
                 >
                 </GodCard>
               </div>
@@ -307,6 +308,16 @@ export default {
       this.$refs.pantheonFilterPanel.uncheckAllFilters();
       this.$refs.damageFilterPanel.uncheckAllFilters();
       this.$refs.basicFilterPanel.uncheckAllFilters();
+    },
+    godSelected: function (godId) {
+      const TAG = "\nselector - godSelected(), ";
+      console.log(TAG + "god selected: ");
+      console.log(godId);
+      let selectedGod = this.godsArray.filter((godObj) => {
+        return godObj.id === godId;
+      })[0];
+      console.dir(selectedGod);
+      this.$router.push({ path: `/create/${godId}` });
     },
   },
 };
