@@ -140,8 +140,98 @@
           </div>
         </div>
 
-        <!-- Right side col will hold the tags, abilities, item info, and publish buttons -->
-        <div class="col border border-warning"></div>
+        <!-- Right side col will hold the tags, abilities, items, and publish buttons -->
+        <div class="col ml-2 border border-warning">
+          <!-- This row will hold tags -->
+          <div class="row bg-secondary text-white justify-content-center">
+            <div class="col">
+              <div class="row justify-content-center text-center">
+                <div class="col">
+                  <h1>Tags</h1>
+                </div>
+              </div>
+              <GodTagsMain
+                :godObject="godObject"
+                :godDamageType="godDamageType"
+                :godBasicAttackType="godBasicAttackType"
+              />
+            </div>
+          </div>
+          <!-- This row will hold ability icons -->
+          <div class="row mt-2 bg-secondary text-white justify-content-center">
+            <div class="col">
+              <div class="row justify-content-center text-center">
+                <div class="col">
+                  <h1>Abilities</h1>
+                </div>
+              </div>
+              <GodAbilitiesMain
+                :ability1="godObject.Ability_1"
+                :ability2="godObject.Ability_2"
+                :ability3="godObject.Ability_3"
+                :ability4="godObject.Ability_4"
+                :ability5="godObject.Ability_5"
+              />
+            </div>
+          </div>
+
+          <!-- This row will hold the items. Welcome to bootstrap hell. -->
+          <div
+            class="row mt-2 p-2 bg-secondary text-white justify-content-center"
+          >
+            <div class="col">
+              <!-- This row will hold consumables and relics -->
+              <div class="row justify-content-center">
+                <!-- Consumables -->
+                <div class="col mr-2 bg-info rounded">
+                  <h2 class="m-0 text-center">Consumables</h2>
+                  <div class="row justify-content-center">
+                    <ItemFrameSmall frameType="consumable" />
+                    <ItemFrameSmall frameType="consumable" />
+                  </div>
+                </div>
+                <!-- Relics -->
+                <div class="col mr-2 bg-info rounded">
+                  <h2 class="m-0 text-center">Relics</h2>
+                  <div class="row justify-content-center">
+                    <ItemFrameSmall frameType="relic" />
+                    <ItemFrameSmall frameType="relic" />
+                  </div>
+                </div>
+              </div>
+
+              <!-- This row will hold the main items -->
+              <div class="row justify-content-center">
+                <div class="col mr-2 mt-2 bg-info rounded">
+                  <h2 class="m-0 text-center">Items</h2>
+                  <div class="row justify-content-center">
+                    <ItemFrameSmall frameType="item" />
+                    <ItemFrameSmall frameType="item" />
+                    <ItemFrameSmall frameType="item" />
+                    <ItemFrameSmall frameType="item" />
+                    <ItemFrameSmall frameType="item" />
+                    <ItemFrameSmall frameType="item" />
+                  </div>
+                </div>
+              </div>
+
+              <!-- This row will hold the extra items, which can be anything (consumables, relics, etc.) -->
+              <div class="row justify-content-center">
+                <div class="col mr-2 mt-2 bg-info rounded">
+                  <h2 class="m-0 text-center">Extra Items</h2>
+                  <div class="row justify-content-center">
+                    <ItemFrameSmall frameType="all" />
+                    <ItemFrameSmall frameType="all" />
+                    <ItemFrameSmall frameType="all" />
+                    <ItemFrameSmall frameType="all" />
+                    <ItemFrameSmall frameType="all" />
+                    <ItemFrameSmall frameType="all" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -160,8 +250,17 @@
 </template>
 
 <script>
+// Imports
 import GodCardLarge from "../../components/Gods/GodCardLarge.vue";
 import GodStatPill from "../../components/Gods/GodStatPill.vue";
+import GodTagsMain from "../../components/Tags/GodTagsMain.vue";
+import GodAbilitiesMain from "../../components/Abilities/GodAbilitiesMain.vue";
+import ItemFrameSmall from "../../components/Items/ItemFrameSmall.vue";
+
+/**
+ * @author Patrick W.
+ * @description Build page.
+ */
 export default {
   head: {
     title: "Create a Build",
@@ -170,6 +269,9 @@ export default {
   components: {
     GodCardLarge,
     GodStatPill,
+    GodTagsMain,
+    GodAbilitiesMain,
+    ItemFrameSmall,
   },
   async asyncData({ params }) {
     const godId = params.godId;
@@ -213,6 +315,14 @@ export default {
       } else if (getGodResponse.status === "Success") {
         this.godObject = getGodResponse.resData;
 
+        /**
+         * For some reason Persephone's basic attack type isn't specified in the api JSON.
+         * In the game her basic attacks are ranged so use a special check for that.
+         */
+        if (this.godObject.Name === "Persephone") {
+          this.godBasicAttackType = "Ranged";
+        }
+
         // Successfully got the data. Now set damage type and attack type for easy access.
         const splitted = this.godObject.Type.replace(/\s/g, "").split(",");
 
@@ -245,6 +355,9 @@ export default {
     }
   },
   computed: {
+    /**
+     * @description Computed property to parse the level string to an Int.
+     */
     currentLevelToInt: function () {
       return parseInt(this.currentLevel);
     },
