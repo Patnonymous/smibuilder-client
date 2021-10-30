@@ -8,17 +8,22 @@
 </template>
 
 <script>
+// Imports
+const { round } = require("mathjs");
+
 /**
  * @author Patrick W.
- * @description An input to display a statistic.
+ * @description A row-col template that will display a stat.
+ * Has multiple props to configure how the stat will display and work.
  */
-const { round } = require("mathjs");
 export default {
   name: "GodStatPill",
   components: {},
   props: {
     /**
-     * The stats number at level 1.
+     * The stats number at base level.
+     * Note that stats that scale will ALWAYS start out at statBase + (scalingPerlevel * 1)
+     * because you can't have a scaling stat start at level zero.
      */
     statBase: {
       type: Number,
