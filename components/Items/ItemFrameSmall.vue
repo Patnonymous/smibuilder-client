@@ -1,14 +1,12 @@
 <template>
-  <div class="m-2">
-    <div class="col p-1 bg-white rounded text-center">
-      <div class="card" style="width: 5rem; height: 5rem">
+  <div class="m-0 p-0 item-frame-style">
+    <div class="col-auto p-1 bg-white rounded">
+      <div class="card border border-danger item-frame-small">
         <img
           v-if="itemData !== null"
-          v-b-tooltip.hover
-          :title="abilityData.Summary"
           class="card-img-top"
-          :src="abilityData.URL"
-          alt="Ability Icon"
+          :src="itemData.itemIcon_URL"
+          alt="Item Icon"
         />
       </div>
     </div>
@@ -29,7 +27,7 @@ export default {
       default: null,
     },
     /**
-     * @description Determines which items will go in this frame. Can be: consumable, relic, item, all
+     * @description Determines which items will go in this frame. Can be: consumable, relic, item, any
      */
     frameType: {
       type: String,
@@ -39,12 +37,23 @@ export default {
   data: function () {
     return {};
   },
-  mounted: async function () {
-    const TAG = "\nItemFrameSmall - mounted(), ";
-    console.log(TAG + "outputting itemData: ");
-    console.log(this.itemData);
-  },
+  mounted: async function () {},
   computed: {},
   methods: {},
 };
 </script>
+
+<style scoped>
+.item-frame-style {
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+.item-frame-style:hover {
+  transform: scale(1.2);
+}
+
+.item-frame-small {
+  width: 3.5rem;
+  height: 3.5rem;
+}
+</style>
