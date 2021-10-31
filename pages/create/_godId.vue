@@ -175,58 +175,47 @@
             </div>
           </div>
 
-          <!-- This row will hold the items. Welcome to bootstrap hell. -->
+          <!-- This row will hold the items. -->
           <div
             class="row mt-2 p-2 bg-secondary text-white justify-content-center"
           >
+            <BuilderItemsMain
+              :godRole="godObject.Roles"
+              :godDamageType="godDamageType"
+              :godBasicAttackType="godBasicAttackType"
+            />
+          </div>
+
+          <!-- This row will hold the share and publish buttons -->
+          <div class="row mt-2 bg-secondary text-white justify-content-center">
+            <!-- Left side col for share link -->
             <div class="col">
-              <!-- This row will hold consumables and relics -->
-              <div class="row justify-content-center">
-                <!-- Consumables -->
-                <div class="col mr-2 bg-info rounded">
-                  <h2 class="m-0 text-center">Consumables</h2>
-                  <div class="row justify-content-center">
-                    <ItemFrameSmall frameType="consumable" />
-                    <ItemFrameSmall frameType="consumable" />
-                  </div>
-                </div>
-                <!-- Relics -->
-                <div class="col mr-2 bg-info rounded">
-                  <h2 class="m-0 text-center">Relics</h2>
-                  <div class="row justify-content-center">
-                    <ItemFrameSmall frameType="relic" />
-                    <ItemFrameSmall frameType="relic" />
-                  </div>
+              <div class="row text-center">
+                <div class="col">
+                  <h2>Share with this Link</h2>
                 </div>
               </div>
-
-              <!-- This row will hold the main items -->
-              <div class="row justify-content-center">
-                <div class="col mr-2 mt-2 bg-info rounded">
-                  <h2 class="m-0 text-center">Items</h2>
-                  <div class="row justify-content-center">
-                    <ItemFrameSmall frameType="item" />
-                    <ItemFrameSmall frameType="item" />
-                    <ItemFrameSmall frameType="item" />
-                    <ItemFrameSmall frameType="item" />
-                    <ItemFrameSmall frameType="item" />
-                    <ItemFrameSmall frameType="item" />
-                  </div>
+              <div class="row text-center">
+                <div class="col">
+                  <h4>http whatever etc. etc. dot com</h4>
                 </div>
               </div>
+            </div>
 
-              <!-- This row will hold the extra items, which can be anything (consumables, relics, etc.) -->
-              <div class="row justify-content-center">
-                <div class="col mr-2 mt-2 bg-info rounded">
-                  <h2 class="m-0 text-center">Extra Items</h2>
-                  <div class="row justify-content-center">
-                    <ItemFrameSmall frameType="all" />
-                    <ItemFrameSmall frameType="all" />
-                    <ItemFrameSmall frameType="all" />
-                    <ItemFrameSmall frameType="all" />
-                    <ItemFrameSmall frameType="all" />
-                    <ItemFrameSmall frameType="all" />
-                  </div>
+            <!-- Right side col for the buttons -->
+            <div class="col-2">
+              <div class="row mt-1 justify-content-center">
+                <div class="col">
+                  <button type="button" class="btn btn-outline-warning w-100">
+                    Clear All
+                  </button>
+                </div>
+              </div>
+              <div class="row mt-1 mb-1 justify-content-center">
+                <div class="col">
+                  <button type="button" class="btn btn-outline-primary w-100">
+                    Publish
+                  </button>
                 </div>
               </div>
             </div>
@@ -255,7 +244,7 @@ import GodCardLarge from "../../components/Gods/GodCardLarge.vue";
 import GodStatPill from "../../components/Gods/GodStatPill.vue";
 import GodTagsMain from "../../components/Tags/GodTagsMain.vue";
 import GodAbilitiesMain from "../../components/Abilities/GodAbilitiesMain.vue";
-import ItemFrameSmall from "../../components/Items/ItemFrameSmall.vue";
+import BuilderItemsMain from "../../components/Builder/BuilderItemsMain.vue";
 
 /**
  * @author Patrick W.
@@ -271,7 +260,7 @@ export default {
     GodStatPill,
     GodTagsMain,
     GodAbilitiesMain,
-    ItemFrameSmall,
+    BuilderItemsMain,
   },
   async asyncData({ params }) {
     const godId = params.godId;
