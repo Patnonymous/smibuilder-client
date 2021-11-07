@@ -57,6 +57,7 @@
               :key="index"
               :itemData="extra"
               frameType="any"
+              @click.native="showItemSelectorModal('any')"
             />
           </div>
         </div>
@@ -94,6 +95,10 @@ export default {
       type: String,
       required: true,
     },
+    godName: {
+      type: String,
+      required: true,
+    },
   },
   data: function () {
     return {
@@ -123,7 +128,7 @@ export default {
       return window.innerWidth - 200;
     },
     getWindowHeight: function () {
-      return window.innerHeight - 200;
+      return window.innerHeight - 50;
     },
   },
   methods: {
@@ -138,14 +143,14 @@ export default {
           godDamageType: this.godDamageType,
           godBasicAttackType: this.godBasicAttackType,
           forcedFilter: filterType,
+          godName: this.godName,
         },
         {
           name: "itemSelectorModal",
           resizable: true,
           adaptive: true,
           width: this.getWindowWidth,
-          height: "auto",
-          scrollable: true,
+          height: this.getWindowHeight,
         }
       );
     },
