@@ -183,6 +183,7 @@
               :godRole="godObject.Roles"
               :godDamageType="godDamageType"
               :godBasicAttackType="godBasicAttackType"
+              :godName="godObject.Name"
             />
           </div>
 
