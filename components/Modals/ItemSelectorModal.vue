@@ -1,135 +1,175 @@
 <template>
-  <div class="mt-2 mb-2 ml-4 mr-4 mh-100 overflow-auto p-4">
-    <!-- This row will hold the filter and main item search  -->
-    <div class="row">
-      <!-- This col will hold the filter -->
-      <div class="col-3 p-4 border border-primary">
-        <!-- Filters Header -->
-        <div class="row justify-content-center">
-          <div class="col-auto text-center">
-            <h2>Filters</h2>
+  <modal
+    :name="name"
+    @before-open="clearData"
+    @opened="modalOpened"
+    :resizable="true"
+    :adaptive="true"
+    :width="getWindowWidth"
+    :height="getWindowHeight"
+  >
+    <loading :active.sync="isLoading" :is-full-page="fullPage" />
+    <div class="mt-2 mb-2 ml-4 mr-4 mh-100 overflow-auto p-4">
+      <!-- This row will hold the filter and main item search  -->
+      <div class="row">
+        <!-- This col will hold the filter -->
+        <div class="col-3 p-4 border border-primary">
+          <!-- Filters Header -->
+          <div class="row justify-content-center">
+            <div class="col-auto text-center">
+              <h2>Filters</h2>
+            </div>
+          </div>
+          <!-- General filters -->
+          <FilterPanel
+            filterGroup="general"
+            groupTitle="General"
+            ref="generalFilterPanel"
+            :arrayOfFilterStrings="arrayGeneralFilterStrings"
+            @filter-change="filterChanged"
+          />
+          <!-- Offense filters -->
+          <FilterPanel
+            filterGroup="offense"
+            groupTitle="Offense"
+            ref="offenseFilterPanel"
+            :arrayOfFilterStrings="arrayOffenseFilterStrings"
+            @filter-change="filterChanged"
+          />
+          <!-- Defense  filters -->
+          <FilterPanel
+            filterGroup="defense"
+            groupTitle="Defense"
+            ref="defenseFilterPanel"
+            :arrayOfFilterStrings="arrayDefenseFilterStrings"
+            @filter-change="filterChanged"
+          />
+          <!-- Utility filters -->
+          <FilterPanel
+            filterGroup="utility"
+            groupTitle="Utility"
+            ref="utilityFilterPanel"
+            :arrayOfFilterStrings="arrayUtilityFilterStrings"
+            @filter-change="filterChanged"
+          />
+
+          <div class="row justify-content-center">
+            <div class="col-auto">
+              <button
+                class="btn btn-dark"
+                type="button"
+                @click="resetAllFilters"
+              >
+                Reset All
+              </button>
+            </div>
           </div>
         </div>
-        <!-- General filters -->
-        <FilterPanel
-          filterGroup="general"
-          groupTitle="General"
-          ref="generalFilterPanel"
-          :arrayOfFilterStrings="arrayGeneralFilterStrings"
-          @filter-change="filterChanged"
-        />
-        <!-- Offense filters -->
-        <FilterPanel
-          filterGroup="offense"
-          groupTitle="Offense"
-          ref="offenseFilterPanel"
-          :arrayOfFilterStrings="arrayOffenseFilterStrings"
-          @filter-change="filterChanged"
-        />
-        <!-- Defense  filters -->
-        <FilterPanel
-          filterGroup="defense"
-          groupTitle="Defense"
-          ref="defenseFilterPanel"
-          :arrayOfFilterStrings="arrayDefenseFilterStrings"
-          @filter-change="filterChanged"
-        />
-        <!-- Utility filters -->
-        <FilterPanel
-          filterGroup="utility"
-          groupTitle="Utility"
-          ref="utilityFilterPanel"
-          :arrayOfFilterStrings="arrayUtilityFilterStrings"
-          @filter-change="filterChanged"
-        />
 
-        <div class="row justify-content-center">
-          <div class="col-auto">
-            <button class="btn btn-dark" type="button" @click="resetAllFilters">
-              Reset All
-            </button>
+        <!-- This col will hold the item search -->
+        <div class="col border border-primary">
+          <div class="row p-2">
+            <div class="col">
+              <input
+                v-model="userSearchTerm"
+                type="text"
+                class="form-control"
+                placeholder="Search by name..."
+              />
+            </div>
+          </div>
+
+          <div class="row item-list-height">
+            <div class="col mh-100 overflow-auto">
+              <!-- Each row is a chunk of arrayChunk. -->
+              <div
+                class="row mt-1 border border-warning"
+                v-for="(chunk, index) in filteredItemsArray"
+                :key="index"
+              >
+                <!-- Each col is an item in the chunk. -->
+                <div
+                  class="col-auto m-auto"
+                  v-for="item in chunk"
+                  :key="item.id"
+                >
+                  <ItemFrameSmall
+                    @click.native="itemClicked(item)"
+                    :itemData="item"
+                    :frameType="forcedFilter"
+                  />
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
 
-      <!-- This col will hold the item search -->
-      <div class="col border border-primary">
-        <div class="row p-2">
-          <div class="col">
-            <input
-              v-model="userSearchTerm"
-              type="text"
-              class="form-control"
-              placeholder="Search by name..."
-            />
-          </div>
-        </div>
-
-        <div class="row item-list-height">
-          <div class="col mh-100 overflow-auto">
-            <!-- Each row is a chunk of arrayChunk. -->
-            <div
-              class="row mt-1 border border-warning"
-              v-for="(chunk, index) in filteredItemsArray"
-              :key="index"
-            >
-              <!-- Each col is an item in the chunk. -->
-              <div class="col-auto m-auto" v-for="item in chunk" :key="item.id">
-                <ItemFrameSmall
-                  @click.native="itemSelected(item)"
-                  :itemData="item"
-                  :frameType="forcedFilter"
-                />
+      <!-- This row will hold the item tree view and select button -->
+      <div class="row mt-3 border border-secondary">
+        <!-- Item tree col -->
+        <div class="col border border-primary">
+          <div class="row">
+            <div class="col">
+              <ItemTree
+                v-if="selectedItem !== null && selectedItem.Type === 'Item'"
+                :rootItemId="selectedItem.RootItemId"
+                :selectedItemId="selectedItem.ItemId"
+              />
+            </div>
+            <div class="col-5 border border-warning">
+              <ItemFrameDetailed :itemData="selectedItem" />
+              <div class="row" v-if="selectedItem !== null">
+                <div class="col">
+                  <button
+                    @click="clearCurrentItemSelection"
+                    type="button"
+                    class="btn btn-outline-warning float-left"
+                  >
+                    Clear Selection
+                  </button>
+                </div>
+                <div class="col">
+                  <button
+                    @click="selectCurrentItem"
+                    type="button"
+                    class="btn btn-outline-primary float-right"
+                  >
+                    Select This Item
+                  </button>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-
-    <!-- This row will hold the item tree view and select button -->
-    <div class="row mt-3 border border-secondary">
-      <!-- Item tree col -->
-      <div class="col border border-primary">
-        <div class="row">
-          <div class="col">
-            <h2>Item tree in here</h2>
-          </div>
-          <div class="col-4 border border-warning">
-            <h4>Selected item here</h4>
-          </div>
-        </div>
-      </div>
-
-      <!-- Select button col -->
-      <div class="col-2">
-        <div class="row justify-content-center">
-          <div class="col">
-            <button
-              type="button"
-              class="btn btn-outline-primary mt-2 mb-2 w-100"
-            >
-              Select Item
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
+  </modal>
 </template>
 
 <script>
 // Imports
 import ItemFrameSmall from "../Items/ItemFrameSmall.vue";
 import FilterPanel from "../Gods/FilterPanel.vue";
+import ItemFrameDetailed from "../Items/ItemFrameDetailed.vue";
+import ItemTree from "../Items/ItemTree.vue";
+import Loading from "vue-loading-overlay";
+import "vue-loading-overlay/dist/vue-loading.css";
 
 export default {
   name: "ItemSelectorModal",
   components: {
     ItemFrameSmall,
     FilterPanel,
+    ItemFrameDetailed,
+    ItemTree,
+    Loading,
   },
   props: {
+    name: {
+      type: String,
+      required: true,
+    },
     godRole: {
       type: String,
       required: true,
@@ -152,9 +192,14 @@ export default {
       required: false,
       default: "Not Ratatoskr",
     },
+    currentlyEquippedItemIds: {
+      type: Array,
+      required: true,
+    },
   },
   data: function () {
     return {
+      // This is the array of items, retrieved on beforeMount.
       itemsArray: [],
       arrayGeneralFilterStrings: ["Consumable", "Relic", "Starter Item"],
       arrayOffenseFilterStrings: [
@@ -186,64 +231,19 @@ export default {
         utility: [],
       },
       userSearchTerm: "",
+      selectedItem: null,
+      // Vue loading overlay control bool.
+      isLoading: false,
+      // Vue loading overlay full page.
+      fullPage: true,
     };
   },
-  beforeMount: async function () {
-    const TAG = "\nItemSelectorModal - beforeMout(), ";
-    console.log(TAG + "getting items before mount.");
-    console.log("forcedFilter: ", this.forcedFilter);
-
-    let loader = this.$loading.show();
-    let isRat = false;
-    let itemsResponse = [];
-
-    if (this.forcedFilter === "consumable") {
-      itemsResponse = await this.$axios.$get(
-        `${this.$config.serverUrl}/items/consumables`
-      );
-    } else if (this.forcedFilter === "relic") {
-      itemsResponse = await this.$axios.$get(
-        `${this.$config.serverUrl}/items/relics`
-      );
-    } else if (this.forcedFilter === "item") {
-      if (this.godName === "Ratatoskr") {
-        isRat = true;
-      }
-      itemsResponse = await this.$axios.$get(
-        `${this.$config.serverUrl}/items/${this.godRole}/${
-          this.godDamageType
-        }/${this.godBasicAttackType}/${true}/${isRat}`
-      );
-    } else if (this.forcedFilter === "any") {
-      itemsResponse = await this.$axios.$get(`${this.$config.serverUrl}/items`);
-    }
-
-    console.log("itemsResponse: ", itemsResponse);
-
-    if (itemsResponse.status === "Failure") {
-      this.$notify({
-        title: "Items Error",
-        text: `An error has occurred: ${allItemsResponse.resData}`,
-        duration: 6000,
-        type: "error",
-      });
-      loader.hide();
-    } else if (itemsResponse.status === "Success") {
-      this.itemsArray = itemsResponse.resData;
-      console.log("Item object 2: ");
-      console.dir(this.itemsArray[1]);
-      loader.hide();
-    }
-  },
-  mounted: async function () {
-    const TAG = "\nItemSelectorModal - mounted(), ";
-    console.log(TAG + "mounted.");
-  },
+  mounted: async function () {},
   computed: {
-    chunkedItems: function () {
-      let chunked = this.lodash.chunk(this.itemsArray, 8);
-      return chunked;
-    },
+    /**
+     * @description Filters items according to the current user filters.
+     * Returns a chunked, filtered array.
+     */
     filteredItemsArray: function () {
       const SELF = this;
       function showThisItem(item) {
@@ -536,26 +536,100 @@ export default {
       }
       return this.lodash.chunk(this.itemsArray.filter(showThisItem), 8);
     },
+    getWindowWidth: function () {
+      return window.innerWidth - 200;
+    },
+    getWindowHeight: function () {
+      return window.innerHeight - 50;
+    },
   },
   methods: {
-    itemSelected: function (itemData) {
-      const TAG = "\nItemSelectorModal - itemSelected(), ";
-      console.log(TAG + "Selected: ");
-      console.dir(itemData);
+    /**
+     * @description User clicks on an item.
+     */
+    itemClicked: function (itemData) {
+      this.selectedItem = itemData;
     },
+    clearCurrentItemSelection: function () {
+      this.selectedItem = null;
+    },
+    selectCurrentItem: function () {
+      this.$emit("itemSelected", this.selectedItem);
+    },
+    /**
+     * Gets called when a filter changed. Sets the currently selected filters
+     * to the newest updated list of filters.
+     */
     filterChanged: function (selectedFilters) {
-      const TAG = "itemSelectorModal - filterChanged(), ";
-      console.log(TAG + "fired.");
-      console.dir(selectedFilters);
       this.currentlySelectedFilters[selectedFilters.filterGroup] =
         selectedFilters.selectedFilters;
-      console.dir(this.currentlySelectedFilters);
     },
+    /**
+     * @description Reset all the items filters to unchecked state.
+     */
     resetAllFilters: function () {
       this.$refs.generalFilterPanel.uncheckAllFilters();
       this.$refs.offenseFilterPanel.uncheckAllFilters();
       this.$refs.defenseFilterPanel.uncheckAllFilters();
       this.$refs.utilityFilterPanel.uncheckAllFilters();
+    },
+    /**
+     * @description Clear and reset data.
+     */
+    clearData: function (event) {
+      this.itemsArray.length = 0;
+      this.selectedItem = null;
+      this.userSearchTerm = "";
+      this.currentlySelectedFilters.general.length = 0;
+      this.currentlySelectedFilters.offense.length = 0;
+      this.currentlySelectedFilters.defense.length = 0;
+      this.currentlySelectedFilters.utility.length = 0;
+    },
+    modalOpened: async function (event) {
+      // Show loading and init vars.
+      this.isLoading = true;
+      let isRat = false;
+      let itemsResponse = [];
+
+      // Do all the gets... (they're actually posts)
+      if (this.forcedFilter === "consumable") {
+        itemsResponse = await this.$axios.$post(
+          `${this.$config.serverUrl}/items/consumables`,
+          { equipped: this.currentlyEquippedItemIds }
+        );
+      } else if (this.forcedFilter === "relic") {
+        itemsResponse = await this.$axios.$post(
+          `${this.$config.serverUrl}/items/relics`,
+          { equipped: this.currentlyEquippedItemIds }
+        );
+      } else if (this.forcedFilter === "item") {
+        if (this.godName === "Ratatoskr") {
+          isRat = true;
+        }
+        itemsResponse = await this.$axios.$post(
+          `${this.$config.serverUrl}/items/${this.godRole}/${
+            this.godDamageType
+          }/${this.godBasicAttackType}/${true}/${isRat}`,
+          { equipped: this.currentlyEquippedItemIds }
+        );
+      } else if (this.forcedFilter === "any") {
+        itemsResponse = await this.$axios.$post(
+          `${this.$config.serverUrl}/items`,
+          { equipped: this.currentlyEquippedItemIds }
+        );
+      }
+      if (itemsResponse.status === "Failure") {
+        this.$notify({
+          title: "Items Error",
+          text: `An error has occurred: ${allItemsResponse.resData}`,
+          duration: 6000,
+          type: "error",
+        });
+        this.isLoading = false;
+      } else if (itemsResponse.status === "Success") {
+        this.itemsArray = itemsResponse.resData;
+        this.isLoading = false;
+      }
     },
   },
 };
