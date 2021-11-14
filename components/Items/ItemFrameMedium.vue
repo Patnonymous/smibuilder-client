@@ -37,12 +37,7 @@ export default {
   data: function () {
     return {};
   },
-  mounted: async function () {
-    const TAG = "\nItemFrameMedium - mounted(), ";
-    console.log(TAG + "outputting frame data: ");
-    console.log(this.frameType);
-    console.log(this.itemData);
-  },
+  mounted: async function () {},
   computed: {},
   methods: {},
 };
