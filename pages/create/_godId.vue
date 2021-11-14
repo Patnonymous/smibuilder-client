@@ -180,6 +180,7 @@
             class="row mt-2 p-2 bg-secondary text-white justify-content-center"
           >
             <BuilderItemsMain
+              ref="builderItemsMain"
               :godRole="godObject.Roles"
               :godDamageType="godDamageType"
               :godBasicAttackType="godBasicAttackType"
@@ -198,7 +199,7 @@
               </div>
               <div class="row text-center">
                 <div class="col">
-                  <h4>http whatever etc. etc. dot com</h4>
+                  <h5>Share links on hold for now...</h5>
                 </div>
               </div>
             </div>
@@ -207,14 +208,23 @@
             <div class="col-2">
               <div class="row mt-1 justify-content-center">
                 <div class="col">
-                  <button type="button" class="btn btn-outline-warning w-100">
+                  <button
+                    @click="clearAllItems"
+                    type="button"
+                    class="btn btn-outline-warning w-100"
+                  >
                     Clear All
                   </button>
                 </div>
               </div>
               <div class="row mt-1 mb-1 justify-content-center">
                 <div class="col">
-                  <button type="button" class="btn btn-outline-primary w-100">
+                  <button
+                    v-if="$store.state.user.authorized"
+                    @click="openPublishModal"
+                    type="button"
+                    class="btn btn-outline-primary w-100"
+                  >
                     Publish
                   </button>
                 </div>
@@ -236,6 +246,11 @@
         </div>
       </div>
     </div>
+    <BuildPublishModal
+      name="build-publish-modal"
+      :itemIds="equippedItemIds"
+      :godId="parseInt(godId)"
+    />
   </div>
 </template>
 
@@ -246,6 +261,7 @@ import GodStatPill from "../../components/Gods/GodStatPill.vue";
 import GodTagsMain from "../../components/Tags/GodTagsMain.vue";
 import GodAbilitiesMain from "../../components/Abilities/GodAbilitiesMain.vue";
 import BuilderItemsMain from "../../components/Builder/BuilderItemsMain.vue";
+import BuildPublishModal from "../../components/Modals/BuildPublishModal.vue";
 
 /**
  * @author Patrick W.
@@ -262,6 +278,7 @@ export default {
     GodTagsMain,
     GodAbilitiesMain,
     BuilderItemsMain,
+    BuildPublishModal,
   },
   async asyncData({ params }) {
     const godId = params.godId;
@@ -277,22 +294,19 @@ export default {
       godDamageType: null,
       /** Melee or Ranged */
       godBasicAttackType: null,
+      equippedItemIds: {},
     };
   },
   /**
    * @description Async mounted function will attempt to get the god from the server.
    */
   mounted: async function () {
-    const TAG = "\n_god-id.vue - mounted(), ";
-    console.log(TAG + "Creating for god with id: ", this.godId);
-
     let loader = this.$loading.show();
 
     try {
       let getGodResponse = await this.$axios.$get(
         `${this.$config.serverUrl}/gods/${this.godId}`
       );
-      console.log("getGodResponse: ", getGodResponse);
 
       if (getGodResponse.status === "Failure") {
         this.$notify({
@@ -329,8 +343,6 @@ export default {
         }
 
         this.validGod = true;
-        console.log("godObject: ");
-        console.dir(this.godObject);
         loader.hide();
       }
     } catch (error) {
@@ -352,6 +364,17 @@ export default {
       return parseInt(this.currentLevel);
     },
   },
-  methods: {},
+  methods: {
+    openPublishModal: function () {
+      const TAG = "\n_godId - openPublishModal(), ";
+      console.log(TAG + "Opening publish modal...");
+      this.equippedItemIds =
+        this.$refs.builderItemsMain.returnEquippedItemIds();
+      this.$modal.show("build-publish-modal");
+    },
+    clearAllItems: function () {
+      this.$refs.builderItemsMain.clearAllItemFrames();
+    },
+  },
 };
 </script>
