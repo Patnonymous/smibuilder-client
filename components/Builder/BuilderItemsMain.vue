@@ -12,7 +12,9 @@
               :key="index"
               :itemData="consumable"
               frameType="consumable"
-              @click.native="showItemSelectorModal('consumable')"
+              @click.native="
+                showItemSelectorModal('consumable', index, 'consumablesObject')
+              "
             />
           </div>
         </div>
@@ -25,7 +27,9 @@
               :key="index"
               :itemData="relic"
               frameType="relic"
-              @click.native="showItemSelectorModal('relic')"
+              @click.native="
+                showItemSelectorModal('relic', index, 'relicsObject')
+              "
             />
           </div>
         </div>
@@ -41,7 +45,9 @@
               :key="index"
               :itemData="item"
               frameType="item"
-              @click.native="showItemSelectorModal('item')"
+              @click.native="
+                showItemSelectorModal('item', index, 'mainItemsObject')
+              "
             />
           </div>
         </div>
@@ -57,12 +63,24 @@
               :key="index"
               :itemData="extra"
               frameType="any"
-              @click.native="showItemSelectorModal('any')"
+              @click.native="
+                showItemSelectorModal('any', index, 'extrasObject')
+              "
             />
           </div>
         </div>
       </div>
     </div>
+    <ItemSelectorModal
+      name="item-selector-modal"
+      :godRole="godRole"
+      :godDamageType="godDamageType"
+      :godBasicAttackType="godBasicAttackType"
+      :forcedFilter="filterType"
+      :godName="godName"
+      :currentlyEquippedItemIds="formatEquippedItems"
+      @itemSelected="frameThisItem"
+    />
   </div>
 </template>
 
@@ -102,8 +120,11 @@ export default {
   },
   data: function () {
     return {
+      /** Consumable Items */
       consumablesObject: { consumable1: null, consumable2: null },
+      /** Relic Items */
       relicsObject: { relic1: null, relic2: null },
+      /** Item Items. */
       mainItemsObject: {
         item1: null,
         item2: null,
@@ -112,6 +133,7 @@ export default {
         item5: null,
         item6: null,
       },
+      /** Extra Items */
       extrasObject: {
         extra1: null,
         extra2: null,
@@ -120,10 +142,43 @@ export default {
         extra5: null,
         extra6: null,
       },
+      /** Filter type tells what the Item Selector Modal to filter to. */
+      filterType: "",
+      frameIndex: null,
+      frameHelper: "",
     };
   },
   mounted: async function () {},
   computed: {
+    formatEquippedItems: function () {
+      let equippedItems = [];
+      if (this.filterType === "consumable") {
+        for (const item in this.consumablesObject) {
+          if (this.consumablesObject[item] !== null) {
+            equippedItems.push(this.consumablesObject[item].ItemId);
+          }
+        }
+      } else if (this.filterType === "relic") {
+        for (const item in this.relicsObject) {
+          if (this.relicsObject[item] !== null) {
+            equippedItems.push(this.relicsObject[item].ItemId);
+          }
+        }
+      } else if (this.filterType === "item") {
+        for (const item in this.mainItemsObject) {
+          if (this.mainItemsObject[item] !== null) {
+            equippedItems.push(this.mainItemsObject[item].ItemId);
+          }
+        }
+      } else if (this.filterType === "any") {
+        for (const item in this.extrasObject) {
+          if (this.extrasObject[item] !== null) {
+            equippedItems.push(this.extrasObject[item].ItemId);
+          }
+        }
+      }
+      return equippedItems;
+    },
     getWindowWidth: function () {
       return window.innerWidth - 200;
     },
@@ -133,26 +188,79 @@ export default {
   },
   methods: {
     /**
-     * @description Use Vue Modals dynamic modal implementation. Displays a modal that uses the ItemSelectorModal as a template.
+     * @param {String} filterType Type of filter to force when getting items.
+     * @param {String} index Object index in the item holder objects. Ex. 'relic1'
+     * @param {String} frameTypeHelper The object name of the item holder. Ex. 'mainItemsObject'
+     *
+     * @description Set the filterType, frameIndex, and frameHelper then shows the ItemSelectorModal.
      */
-    showItemSelectorModal: function (filterType) {
-      this.$modal.show(
-        ItemSelectorModal,
-        {
-          godRole: this.godRole,
-          godDamageType: this.godDamageType,
-          godBasicAttackType: this.godBasicAttackType,
-          forcedFilter: filterType,
-          godName: this.godName,
-        },
-        {
-          name: "itemSelectorModal",
-          resizable: true,
-          adaptive: true,
-          width: this.getWindowWidth,
-          height: this.getWindowHeight,
+    showItemSelectorModal: function (filterType, index, frameTypeHelper) {
+      this.filterType = filterType;
+      this.frameIndex = index;
+      this.frameHelper = frameTypeHelper;
+      this.$modal.show("item-selector-modal");
+    },
+    /**
+     * @param {JSON} value The items data.
+     *
+     * @description Uses frameHelper and frameIdex to save the item data to the
+     * appropriate frame.
+     */
+    frameThisItem: function (value) {
+      this.$modal.hide("item-selector-modal");
+      this[this.frameHelper][this.frameIndex] = value;
+    },
+    clearAllItemFrames: function () {
+      for (const item in this.consumablesObject) {
+        this.consumablesObject[item] = null;
+      }
+      for (const item in this.relicsObject) {
+        this.relicsObject[item] = null;
+      }
+      for (const item in this.mainItemsObject) {
+        this.mainItemsObject[item] = null;
+      }
+      for (const item in this.extrasObject) {
+        this.extrasObject[item] = null;
+      }
+    },
+    returnEquippedItemIds: function () {
+      let consumables = {};
+      let relics = {};
+      let mainItems = {};
+      let extraItems = {};
+
+      for (const item in this.consumablesObject) {
+        if (this.consumablesObject[item] !== null) {
+          consumables[item] = this.consumablesObject[item].ItemId;
+        } else {
+          consumables[item] = null;
         }
-      );
+      }
+      for (const item in this.relicsObject) {
+        if (this.relicsObject[item] !== null) {
+          relics[item] = this.relicsObject[item].ItemId;
+        } else {
+          relics[item] = null;
+        }
+      }
+      for (const item in this.mainItemsObject) {
+        if (this.mainItemsObject[item] !== null) {
+          mainItems[item] = this.mainItemsObject[item].ItemId;
+        } else {
+          mainItems[item] = null;
+        }
+      }
+      for (const item in this.extrasObject) {
+        if (this.extrasObject[item] !== null) {
+          extraItems[item] = this.extrasObject[item].ItemId;
+        } else {
+          extraItems[item] = null;
+        }
+      }
+
+      let allItemsObject = { consumables, relics, mainItems, extraItems };
+      return allItemsObject;
     },
   },
 };
