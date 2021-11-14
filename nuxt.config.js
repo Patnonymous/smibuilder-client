@@ -28,6 +28,7 @@ export default {
     { src: '~/plugins/notifications-client', ssr: false },
     { src: '~/plugins/vueLoadingOverlay' },
     { src: '~/plugins/vueIodash' },
+    { src: "~plugins/vue-js-modal.js" }
   ],
 
   // Auto import components: https://go.nuxtjs.dev/config-components

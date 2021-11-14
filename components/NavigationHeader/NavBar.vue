@@ -55,7 +55,7 @@
           class="ml-4"
         >
           <b-dropdown-item>My Account</b-dropdown-item>
-          <b-dropdown-item>Logout</b-dropdown-item>
+          <b-dropdown-item @click="logout">Logout</b-dropdown-item>
           <b-dropdown-divider></b-dropdown-divider>
           <b-dropdown-item active>Active action</b-dropdown-item>
           <b-dropdown-item disabled>Disabled action</b-dropdown-item>
@@ -81,6 +81,11 @@ export default {
       console.log(this.$route);
       console.log(TAG + "navigating to pageRoute: " + pageRoute);
       this.$router.push({ path: pageRoute });
+    },
+    logout: function () {
+      localStorage.removeItem("auth");
+      this.$store.commit("user/logOut");
+      this.$router.push({ path: "/builds/search" });
     },
   },
 };
