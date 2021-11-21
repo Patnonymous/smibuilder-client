@@ -43,11 +43,20 @@
       <!-- Row for the build preview. -->
       <div class="row">
         <!-- Consumables -->
-        <div class="col-auto"></div>
+        <div class="col-auto bg-info rounded mt-2 mb-2">
+          <div class="row">
+            <ItemFrameTiny
+              v-for="(consumable, index) in buildData.items.consumables"
+              :key="index"
+              :itemData="consumable"
+              frameType="consumable"
+            />
+          </div>
+        </div>
         <!-- Relics -->
-        <div class="col-auto"></div>
+        <div class="col-auto bg-info rounded mt-2 mb-2"></div>
         <!-- Main Items -->
-        <div class="col-auto"></div>
+        <div class="col-auto bg-info rounded mt-2 mb-2"></div>
       </div>
     </div>
   </div>
@@ -55,11 +64,11 @@
 
 <script>
 // Imports
-import ItemFrameSmall from "../Items/ItemFrameSmall.vue";
+import ItemFrameTiny from "../Items/ItemFrameTiny.vue";
 export default {
   name: "BuildRow",
   components: {
-    ItemFrameSmall,
+    ItemFrameTiny,
   },
   props: {
     buildData: {
@@ -70,7 +79,9 @@ export default {
   data: function () {
     return {};
   },
-  mounted: async function () {},
+  mounted: async function () {
+    console.log(this.buildData);
+  },
   computed: {},
   methods: {},
 };
