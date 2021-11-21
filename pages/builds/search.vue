@@ -113,25 +113,26 @@ export default {
         this.allBuilds[index].godData = godDataResponse.resData;
         this.allBuilds[index].ownerName = getUsernameResponse.resData;
 
-        index++;
-      }
-
-      //  Get items for each build.
-      for (const itemType in this.allBuilds.items) {
-        let index = 0;
-        let aLength = this.allBuilds.items[itemType];
-        while (index < aLength) {
-          let singleItemResponse = await this.$axios.$get(
-            `${this.$config.serverUrl}/items/${this.allBuilds.items[itemType].index}`
-          );
-          if (singleItemResponse.status !== "Success") {
-            throw new Error(singleItemResponse.resData);
-          } else {
-            // Replace ID with actual item data.
-            this.allBuilds.items[itemType].index = singleItemResponse.resData;
+        // Get items
+        for (const itemType in this.allBuilds[index].items) {
+          for (const itemSlot in this.allBuilds[index].items[itemType]) {
+            // item slots CAN be null, only try and get slots that are not null.
+            if (this.allBuilds[index].items[itemType][itemSlot]) {
+              let singleItemResponse = await this.$axios.$get(
+                `${this.$config.serverUrl}/items/${this.allBuilds[index].items[itemType][itemSlot]}`
+              );
+              if (singleItemResponse.status !== "Success") {
+                throw new Error(singleItemResponse.resData);
+              } else {
+                // Replace ID with actual item data.
+                this.allBuilds[index].items[itemType][itemSlot] =
+                  singleItemResponse.resData;
+              }
+            }
           }
-          index++;
         }
+
+        index++;
       }
 
       // Success!
