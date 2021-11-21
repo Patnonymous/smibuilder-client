@@ -354,6 +354,7 @@ export default {
         duration: 6000,
         type: "error",
       });
+      loader.hide();
     }
   },
   computed: {
