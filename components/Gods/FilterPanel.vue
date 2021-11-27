@@ -191,8 +191,6 @@ export default {
      * Then $emits a 'filter-change' event to the parent, along with the object it created.
      */
     filterPanelCheckboxChanged: function () {
-      const TAG = "\nFilterPanel - filterPanelCheckboxChanged(), ";
-      console.log(TAG + "fired.");
       let filterPanelObject = {
         filterGroup: this.filterGroup,
         selectedFilters: this.selectedFilters,
@@ -204,8 +202,6 @@ export default {
      * Then calls the filterPanelCheckboxChanged() function to notify the parent.
      */
     uncheckAllFilters: function () {
-      const TAG = "\nFilterPanel - uncheckAllFilters(), ";
-      console.log(TAG + "unchecking all.");
       this.selectAll = false;
       this.filterPanelCheckboxChanged();
     },

@@ -95,20 +95,10 @@ export default {
      * Does basic error checking then does does a POST to the register api.
      */
     submitRegisterNewAccount: async function () {
-      const TAG = "register - submitRegisterNewAccount(), ";
-      console.log(TAG + "starting.");
-
       let userEmail = this.userInputEmail.trim();
       let username = this.userInputUsername.trim();
       let userPassword = this.userInputPassword.trim();
       let confirmPassword = this.userInputConfirmPassword.trim();
-
-      console.log(TAG + "Outputting inputs below: ");
-      console.log("userEmail: ", userEmail);
-      console.log("username: ", username);
-      console.log("userPassword: ", userPassword);
-      console.log("confirmPassword: ", confirmPassword);
-
       this.errorMessage = "";
 
       // Error checking.
@@ -123,7 +113,6 @@ export default {
         this.errorMessage =
           "The passwords do not match. Please ensure you enter the same password in each field.";
       } else {
-        console.log(TAG + "Passed basic input error checks.");
         let registrationResponse = await this.$axios.$post(
           `${this.$config.serverUrl}/users/register`,
           {
@@ -132,8 +121,6 @@ export default {
             password: userPassword,
           }
         );
-        console.log(TAG + "registrationResponse: ");
-        console.log(registrationResponse);
         if (registrationResponse.status === "Failure") {
           this.errorMessage = registrationResponse.resData;
           this.$notify({
@@ -158,8 +145,6 @@ export default {
      * Reset forms to their defaults.
      */
     resetForm: function () {
-      const TAG = "register - resetForm(), ";
-      console.log(TAG + "resetting.");
       this.userInputEmail = "";
       this.userInputUsername = "";
       this.userInputPassword = "";

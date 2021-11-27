@@ -62,13 +62,8 @@ export default {
   computed: {},
   methods: {
     submitLogin: async function () {
-      const TAG = "login - submitLogin(), ";
       let userEmail = this.userInputEmail;
       let userPassword = this.userInputPassword;
-      console.log(TAG + "Outputting inputs below: ");
-      console.log("userEmail: ", userEmail);
-      console.log("password: ", userPassword);
-
       this.errorMessage = "";
 
       // Error checking.
@@ -77,7 +72,6 @@ export default {
       } else if (userPassword.length === 0) {
         this.errorMessage = "Password input was empty.";
       } else {
-        console.log(TAG + "Passed basic error checks.");
         let loginResponse = await this.$axios.$post(
           `${this.$config.serverUrl}/users/login`,
           {
@@ -85,8 +79,6 @@ export default {
             password: userPassword,
           }
         );
-
-        console.log(TAG + "loginResponse: ", loginResponse);
 
         if (loginResponse.status === "Failure") {
           this.errorMessage = loginResponse.resData;

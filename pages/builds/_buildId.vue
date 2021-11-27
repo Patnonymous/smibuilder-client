@@ -150,8 +150,6 @@ export default {
    * If successful, sets the validBuild bool to true so it will display.
    */
   mounted: async function () {
-    const TAG = "\n_buildId - mounted(), ";
-    console.log(TAG + "Viewing build id: ", this.buildId);
     let loader = this.$loading.show();
     try {
       // Get main build data.
@@ -163,7 +161,6 @@ export default {
       }
       // Set build data.
       this.buildData = getBuildResponse.resData;
-      console.log(this.buildData);
 
       // Get god data.
       let godDataResponse = await this.$axios.$get(
@@ -249,6 +246,10 @@ export default {
       return new Date(this.buildData.createdDate).toUTCString();
     },
   },
-  methods: {},
+  methods: {
+    likeThisBuild: function () {},
+    dislikeThisBuild: function () {},
+    favouriteThisBuild: function () {},
+  },
 };
 </script>

@@ -226,8 +226,6 @@ export default {
   computed: {},
   methods: {
     openPublishModal: function () {
-      const TAG = "\n_godId - openPublishModal(), ";
-      console.log(TAG + "Opening publish modal...");
       this.equippedItemIds =
         this.$refs.builderItemsMain.returnEquippedItemIds();
       this.$modal.show("build-publish-modal");

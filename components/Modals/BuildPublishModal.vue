@@ -75,13 +75,6 @@ export default {
   computed: {},
   methods: {
     publishBuild: async function (event) {
-      const TAG = "\nBuildPublishModal - publishBuild(), ";
-      console.log(TAG + "publishing");
-      console.log("title: ", this.userInputBuildTitle);
-      console.log("description: ", this.userInputBuildDescription);
-      console.log("itemIds: ");
-      console.dir(this.itemIds);
-
       // Var work.
       this.errorMessage = null;
       let buildTitle = this.userInputBuildTitle.trim();
@@ -116,9 +109,6 @@ export default {
               buildGodId: this.godId,
             }
           );
-
-          console.log("buildPublishResponse: ");
-          console.log(buildPublishResponse);
 
           if (buildPublishResponse.status === "Failure") {
             this.$notify({

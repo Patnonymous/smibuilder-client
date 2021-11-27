@@ -169,9 +169,6 @@ export default {
    * 3. The name of the build author, using the owner_id associated with the build.
    */
   mounted: async function () {
-    const TAG = "builds search - async mounted(), ";
-    console.log(TAG + "loading all the builds.");
-
     // Setup - start the loading overlay.
     let loader = this.$loading.show();
 
@@ -337,7 +334,6 @@ export default {
       this.$router.push({ path: `/builds/${build.id}` });
     },
     changeSort: function (sortType) {
-      console.log(sortType);
       this.currentSortType = sortType;
     },
     /**
@@ -349,7 +345,6 @@ export default {
         selectedFilters.selectedFilters;
     },
     resetAllFilters: function () {
-      console.log(this.$store.state.user);
       this.$refs.basicFilterPanel.uncheckAllFilters();
     },
   },

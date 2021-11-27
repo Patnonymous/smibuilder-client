@@ -76,10 +76,6 @@ export default {
   computed: {},
   methods: {
     changePage: function (pageRoute) {
-      const TAG = "NavBar - changePage(), ";
-      console.log(TAG + "The current route is: ");
-      console.log(this.$route);
-      console.log(TAG + "navigating to pageRoute: " + pageRoute);
       this.$router.push({ path: pageRoute });
     },
     logout: function () {
