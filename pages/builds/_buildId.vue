@@ -6,14 +6,22 @@
       <div class="col-2">
         <div class="row m-2">
           <div class="col">
-            <button class="btn btn-outline-success w-100" type="button">
+            <button
+              class="btn btn-outline-success w-100"
+              type="button"
+              @click="likeThisBuild"
+            >
               Like
             </button>
           </div>
         </div>
         <div class="row m-2">
           <div class="col">
-            <button class="btn btn-outline-danger w-100" type="button">
+            <button
+              class="btn btn-outline-danger w-100"
+              type="button"
+              @click="dislikeThisBuild"
+            >
               Dislike
             </button>
           </div>
@@ -247,8 +255,52 @@ export default {
     },
   },
   methods: {
-    likeThisBuild: function () {},
-    dislikeThisBuild: function () {},
+    likeThisBuild: async function () {
+      let likeBuildResponse = await this.$axios.$post(
+        `${this.$config.serverUrl}/builds/like/${this.buildData.id}`,
+        {
+          token: localStorage.getItem("auth"),
+        }
+      );
+      if (likeBuildResponse.status === "Failure") {
+        this.$notify({
+          title: "Like Error",
+          text: `An error occurred when liking the build: ${likeBuildResponse.resData}`,
+          duration: 6000,
+          type: "error",
+        });
+      } else if (likeBuildResponse.status === "Success") {
+        this.$notify({
+          title: "Like",
+          text: "Build successfully liked.",
+          duration: 3000,
+          type: "success",
+        });
+      }
+    },
+    dislikeThisBuild: async function () {
+      let dislikeBuildResponse = await this.$axios.$post(
+        `${this.$config.serverUrl}/builds/dislike/${this.buildData.id}`,
+        {
+          token: localStorage.getItem("auth"),
+        }
+      );
+      if (dislikeBuildResponse.status === "Failure") {
+        this.$notify({
+          title: "Like Error",
+          text: `An error occurred when liking the build: ${dislikeBuildResponse.resData}`,
+          duration: 6000,
+          type: "error",
+        });
+      } else if (dislikeBuildResponse.status === "Success") {
+        this.$notify({
+          title: "Like",
+          text: "Build successfully disliked.",
+          duration: 3000,
+          type: "success",
+        });
+      }
+    },
     favouriteThisBuild: function () {},
   },
 };
