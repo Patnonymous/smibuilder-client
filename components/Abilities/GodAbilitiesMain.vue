@@ -51,15 +51,7 @@ export default {
   data: function () {
     return {};
   },
-  mounted: async function () {
-    const TAG = "\nGodAbilitiesMain - mounted(), ";
-    console.log(TAG + "Outputting ability objects: ");
-    console.dir(this.ability1);
-    console.dir(this.ability2);
-    console.dir(this.ability3);
-    console.dir(this.ability4);
-    console.dir(this.ability5);
-  },
+  mounted: async function () {},
   computed: {},
   methods: {},
 };

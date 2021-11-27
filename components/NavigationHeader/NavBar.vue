@@ -76,15 +76,17 @@ export default {
   computed: {},
   methods: {
     changePage: function (pageRoute) {
-      const TAG = "NavBar - changePage(), ";
-      console.log(TAG + "The current route is: ");
-      console.log(this.$route);
-      console.log(TAG + "navigating to pageRoute: " + pageRoute);
       this.$router.push({ path: pageRoute });
     },
     logout: function () {
       localStorage.removeItem("auth");
       this.$store.commit("user/logOut");
+      this.$notify({
+        title: "Log out.",
+        text: "You are now logged out.",
+        duration: 3000,
+        type: "success",
+      });
       this.$router.push({ path: "/builds/search" });
     },
   },

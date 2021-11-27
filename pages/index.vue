@@ -20,9 +20,6 @@ export default {
   computed: {},
   methods: {
     goToOtherPageUsingButton: function () {
-      const TAG = "index - goToOtherPageUsingButton(), ";
-      console.log(TAG + "clicked and starting.");
-
       this.$router.push({ path: "other-page" });
     },
   },

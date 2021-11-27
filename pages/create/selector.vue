@@ -162,16 +162,11 @@ export default {
    * Both results hide the loading overlay when finished.
    */
   mounted: async function () {
-    const TAG = "\nselector.vue - mounted(), ";
-    console.log(TAG + "loading all gods.");
-
     // Show loader
     let loader = this.$loading.show();
     let allGodsResponse = await this.$axios.$get(
       `${this.$config.serverUrl}/gods`
     );
-
-    console.log("allGodsResposne: ", allGodsResponse);
 
     if (allGodsResponse.status === "Failure") {
       this.$notify({
@@ -183,9 +178,6 @@ export default {
       loader.hide();
     } else if (allGodsResponse.status === "Success") {
       this.godsArray = allGodsResponse.resData;
-      console.log("God character object: ");
-      console.dir(this.godsArray[2]);
-
       loader.hide();
     }
   },
@@ -293,12 +285,8 @@ export default {
      * If a filter is changed, update the appropriate array  in the currentlySelectedFilters object.
      */
     filterChanged: function (selectedFilters) {
-      const TAG = "\nselector - filterChanged(), ";
-      console.log(TAG + "fired.");
-      console.dir(selectedFilters);
       this.currentlySelectedFilters[selectedFilters.filterGroup] =
         selectedFilters.selectedFilters;
-      console.dir(this.currentlySelectedFilters);
     },
     /**
      * @description Access the $refs and call their uncheckAllFilters function.
@@ -310,13 +298,9 @@ export default {
       this.$refs.basicFilterPanel.uncheckAllFilters();
     },
     godSelected: function (godId) {
-      const TAG = "\nselector - godSelected(), ";
-      console.log(TAG + "god selected: ");
-      console.log(godId);
       let selectedGod = this.godsArray.filter((godObj) => {
         return godObj.id === godId;
       })[0];
-      console.dir(selectedGod);
       this.$router.push({ path: `/create/${godId}` });
     },
   },
