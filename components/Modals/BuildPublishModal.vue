@@ -75,7 +75,7 @@ export default {
   computed: {},
   methods: {
     publishBuild: async function (event) {
-      const TAG = "BuildPublishModal - publishBuild(), ";
+      const TAG = "\nBuildPublishModal - publishBuild(), ";
       console.log(TAG + "publishing");
       console.log("title: ", this.userInputBuildTitle);
       console.log("description: ", this.userInputBuildDescription);
@@ -86,6 +86,7 @@ export default {
       this.errorMessage = null;
       let buildTitle = this.userInputBuildTitle.trim();
       let buildDescription = this.userInputBuildDescription.trim();
+      const token = localStorage.getItem("auth");
       //let userId = this.$store.state.
 
       // Do some client side error checking.
@@ -107,6 +108,7 @@ export default {
           let buildPublishResponse = await this.$axios.$post(
             `${this.$config.serverUrl}/builds/create`,
             {
+              token: token,
               buildOwnerId: this.$store.state.user.currentUser.userId,
               buildTitle: buildTitle,
               buildDescription: buildDescription,
