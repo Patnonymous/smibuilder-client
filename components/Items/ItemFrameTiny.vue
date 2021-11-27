@@ -1,7 +1,7 @@
 <template>
   <div class="m-0 p-0 item-frame-style">
     <div class="col-auto p-1 bg-dark rounded">
-      <div class="card border border-danger item-frame-small">
+      <div class="card item-frame-small">
         <img
           v-if="itemData !== null"
           class="card-img-top"
@@ -14,6 +14,11 @@
 </template>
 
 <script>
+/**
+ * @author Patrick W.
+ * @description The smallest most basic ItemFrame. Simply displays the items icon.
+ * No fancy animations or functionality here.
+ */
 export default {
   name: "ItemFrameTiny",
   components: {},
