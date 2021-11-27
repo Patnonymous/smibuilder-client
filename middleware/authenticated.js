@@ -34,6 +34,8 @@ export default function ({ store, redirect, $axios, $config, $notify }) {
                     duration: 6000,
                     type: "success",
                 });
+                localStorage.removeItem("auth");
+                this.$store.commit("user/logOut");
                 return redirect("/login");
             } else if (res.data.status === "Success") { // Successful verification, commit authorization.
                 console.log(TAG + "Verify status == Success");
