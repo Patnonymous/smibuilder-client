@@ -29,11 +29,20 @@
         <div class="row m-2">
           <div class="col">
             <button
+              v-if="!buildAlreadyFavourited"
               class="btn btn-outline-primary w-100"
               type="button"
               @click="favouriteThisBuild"
             >
               Favourite
+            </button>
+            <button
+              v-else
+              class="btn btn-outline-dark w-100"
+              type="button"
+              disabled
+            >
+              Already Favourited
             </button>
           </div>
         </div>
@@ -147,6 +156,7 @@ export default {
     return {
       buildData: {},
       validBuild: false,
+      buildAlreadyFavourited: false,
       /** Magical or Physical */
       godDamageType: null,
       /** Melee or Ranged */
@@ -236,6 +246,23 @@ export default {
             }
           }
         }
+      }
+
+      // Check if the user has already favourited this build.
+      let favouriteCheckResponse = await this.$axios.$post(
+        `${this.$config.serverUrl}/favourites/check`,
+        {
+          userId: this.$store.state.user.currentUser.userId,
+          buildId: this.buildData.id,
+          token: localStorage.getItem("auth"),
+        }
+      );
+      if (favouriteCheckResponse.status === "Failure") {
+        throw new Error(
+          `Error determining if the build is favourited. Error: ${favouriteCheckResponse.resData}`
+        );
+      } else if (favouriteCheckResponse.status === "Success") {
+        this.buildAlreadyFavourited = favouriteCheckResponse.resData;
       }
 
       // Success!
