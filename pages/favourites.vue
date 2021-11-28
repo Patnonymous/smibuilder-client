@@ -81,18 +81,34 @@
         </div>
 
         <!-- Second inner row is the list of build. -->
-        <div v-if="buildsReady" class="row build-list-height">
-          <div class="col mh-100 overflow-auto">
-            <BuildRow
-              @click.native="goToBuild(build)"
-              @buildRemovedFromFavourites="removeBuildFromArray"
-              class="build-row-class"
-              v-for="build in filteredBuildsArray"
-              :key="build.id"
-              :buildData="build"
-              :favouritesPage="true"
-            />
+        <div v-if="buildsReady && arrayBuilds.length > 0">
+          <div class="row build-list-height">
+            <div class="col mh-100 overflow-auto">
+              <BuildRow
+                @click.native="goToBuild(build)"
+                @buildRemovedFromFavourites="removeBuildFromArray"
+                class="build-row-class"
+                v-for="build in filteredBuildsArray"
+                :key="build.id"
+                :buildData="build"
+                :favouritesPage="true"
+              />
+            </div>
           </div>
+          <div class="row">
+            <div class="col">
+              <button
+                type="button"
+                class="btn btn-outline-danger float-right"
+                @click="removeAllFavourites"
+              >
+                Remove All From Favourites
+              </button>
+            </div>
+          </div>
+        </div>
+        <div v-else>
+          <h2>It seems you have no favourites.</h2>
         </div>
       </div>
     </div>
@@ -290,13 +306,42 @@ export default {
       });
       this.arrayBuilds.splice(buildIndex, 1);
     },
+    removeAllFavourites: async function () {
+      if (
+        window.confirm("Are you sure you wish to remove all your favourites?")
+      ) {
+        let removeAllFavouritesResponse = await this.$axios.$post(
+          `${this.$config.serverUrl}/favourites/remove/all`,
+          {
+            userId: this.$store.state.user.currentUser.userId,
+            token: localStorage.getItem("auth"),
+          }
+        );
+        if (removeAllFavouritesResponse.status === "Failure") {
+          this.$notify({
+            title: "Favourite error.",
+            text: `An error has occurred: ${error.message}`,
+            duration: 6000,
+            type: "error",
+          });
+        } else if (removeAllFavouritesResponse.status === "Success") {
+          this.$notify({
+            title: "Favourite.",
+            text: removeAllFavouritesResponse.resData,
+            duration: 3000,
+            type: "success",
+          });
+          this.arrayBuilds.length = 0;
+        }
+      }
+    },
   },
 };
 </script>
 
 <style scoped>
 .build-list-height {
-  height: 80vh;
+  height: 76vh;
 }
 .build-row-class {
   transition: transform 0.2s;
