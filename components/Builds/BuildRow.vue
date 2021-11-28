@@ -130,7 +130,33 @@ export default {
   mounted: async function () {},
   computed: {},
   methods: {
-    removeFromFavourites: function () {},
+    removeFromFavourites: async function () {
+      let removeFavouriteResponse = await this.$axios.$post(
+        `${this.$config.serverUrl}/favourites/remove`,
+        {
+          buildId: this.buildData.id,
+          userId: this.$store.state.user.currentUser.userId,
+          token: localStorage.getItem("auth"),
+        }
+      );
+
+      if (removeFavouriteResponse.status === "Failure") {
+        this.$notify({
+          title: "Favourite error.",
+          text: `An error has occurred: ${error.message}`,
+          duration: 6000,
+          type: "error",
+        });
+      } else if (removeFavouriteResponse.status === "Success") {
+        this.$notify({
+          title: "Favourite.",
+          text: removeFavouriteResponse.resData,
+          duration: 3000,
+          type: "success",
+        });
+        this.$emit("buildRemovedFromFavourites", this.buildData.id);
+      }
+    },
   },
 };
 </script>
