@@ -355,6 +355,7 @@ export default {
           duration: 3000,
           type: "success",
         });
+        this.buildAlreadyFavourited = true;
       }
     },
   },
