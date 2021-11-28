@@ -85,6 +85,7 @@
           <div class="col mh-100 overflow-auto">
             <BuildRow
               @click.native="goToBuild(build)"
+              @buildRemovedFromFavourites="removeBuildFromArray"
               class="build-row-class"
               v-for="build in filteredBuildsArray"
               :key="build.id"
@@ -282,6 +283,12 @@ export default {
     },
     changeSort: function (sortType) {
       this.currentSortType = sortType;
+    },
+    removeBuildFromArray: function (buildId) {
+      let buildIndex = this.arrayBuilds.findIndex((build) => {
+        return build.id === buildId;
+      });
+      this.arrayBuilds.splice(buildIndex, 1);
     },
   },
 };
