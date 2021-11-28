@@ -89,6 +89,7 @@
               v-for="build in filteredBuildsArray"
               :key="build.id"
               :buildData="build"
+              :favouritesPage="true"
             />
           </div>
         </div>
@@ -275,6 +276,26 @@ export default {
       return filteredBuilds;
     },
   },
-  methods: {},
+  methods: {
+    goToBuild: function (build) {
+      this.$router.push({ path: `/builds/${build.id}` });
+    },
+    changeSort: function (sortType) {
+      this.currentSortType = sortType;
+    },
+  },
 };
 </script>
+
+<style scoped>
+.build-list-height {
+  height: 80vh;
+}
+.build-row-class {
+  transition: transform 0.2s;
+}
+.build-row-class:hover {
+  cursor: pointer;
+  transform: scale(0.97);
+}
+</style>
