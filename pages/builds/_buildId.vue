@@ -28,7 +28,11 @@
         </div>
         <div class="row m-2">
           <div class="col">
-            <button class="btn btn-outline-primary w-100" type="button">
+            <button
+              class="btn btn-outline-primary w-100"
+              type="button"
+              @click="favouriteThisBuild"
+            >
               Favourite
             </button>
           </div>
@@ -301,7 +305,31 @@ export default {
         });
       }
     },
-    favouriteThisBuild: function () {},
+    favouriteThisBuild: async function () {
+      let favouriteBuildResponse = await this.$axios.$post(
+        `${this.$config.serverUrl}/favourites`,
+        {
+          userId: this.$store.state.user.currentUser.userId,
+          buildId: this.buildData.id,
+          token: localStorage.getItem("auth"),
+        }
+      );
+      if (favouriteBuildResponse.status === "Failure") {
+        this.$notify({
+          title: "Favourite Error",
+          text: `An error occurred when attempting to favourite: ${favouriteBuildResponse.resData}`,
+          duration: 6000,
+          type: "error",
+        });
+      } else if (favouriteBuildResponse.status === "Success") {
+        this.$notify({
+          title: "Favourite",
+          text: favouriteBuildResponse.resData,
+          duration: 3000,
+          type: "success",
+        });
+      }
+    },
   },
 };
 </script>
