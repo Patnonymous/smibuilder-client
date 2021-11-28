@@ -36,8 +36,18 @@
         <div class="col">
           <h4>{{ buildData.title }} - {{ buildData.godData.Name }}</h4>
         </div>
-        <div class="col">
+        <div class="col-auto mt-2">
           <h5>By {{ buildData.ownerName }}</h5>
+        </div>
+        <!-- Optional col for BuildRows on the favourites page. -->
+        <div v-if="favouritesPage" class="col-auto mt-2">
+          <button
+            type="button"
+            class="btn btn-outline-danger w-100"
+            @click.stop="removeFromFavourites"
+          >
+            Remove From Favourites
+          </button>
         </div>
       </div>
       <!-- Row for the build preview.
@@ -94,6 +104,8 @@ import ItemFrameTiny from "../Items/ItemFrameTiny.vue";
  * This displays the builds title, likes and dislikes, associated god name and icon,
  * consumables, relics, and the main items.
  * Users can click this to take them to the builds in depth display page.
+ * BuildRow on the Favourites page have special functionality where they get a new button to remove
+ * them from fav's.
  */
 export default {
   name: "BuildRow",
@@ -105,12 +117,46 @@ export default {
       type: Object,
       required: true,
     },
+    // Enables special formatting and behavior for BuildRows on the favourites page.
+    favouritesPage: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
   },
   data: function () {
     return {};
   },
   mounted: async function () {},
   computed: {},
-  methods: {},
+  methods: {
+    removeFromFavourites: async function () {
+      let removeFavouriteResponse = await this.$axios.$post(
+        `${this.$config.serverUrl}/favourites/remove`,
+        {
+          buildId: this.buildData.id,
+          userId: this.$store.state.user.currentUser.userId,
+          token: localStorage.getItem("auth"),
+        }
+      );
+
+      if (removeFavouriteResponse.status === "Failure") {
+        this.$notify({
+          title: "Favourite error.",
+          text: `An error has occurred: ${error.message}`,
+          duration: 6000,
+          type: "error",
+        });
+      } else if (removeFavouriteResponse.status === "Success") {
+        this.$notify({
+          title: "Favourite.",
+          text: removeFavouriteResponse.resData,
+          duration: 3000,
+          type: "success",
+        });
+        this.$emit("buildRemovedFromFavourites", this.buildData.id);
+      }
+    },
+  },
 };
 </script>

@@ -28,8 +28,21 @@
         </div>
         <div class="row m-2">
           <div class="col">
-            <button class="btn btn-outline-primary w-100" type="button">
+            <button
+              v-if="!buildAlreadyFavourited"
+              class="btn btn-outline-primary w-100"
+              type="button"
+              @click="favouriteThisBuild"
+            >
               Favourite
+            </button>
+            <button
+              v-else
+              class="btn btn-outline-dark w-100"
+              type="button"
+              disabled
+            >
+              Already Favourited
             </button>
           </div>
         </div>
@@ -143,6 +156,7 @@ export default {
     return {
       buildData: {},
       validBuild: false,
+      buildAlreadyFavourited: false,
       /** Magical or Physical */
       godDamageType: null,
       /** Melee or Ranged */
@@ -234,6 +248,23 @@ export default {
         }
       }
 
+      // Check if the user has already favourited this build.
+      let favouriteCheckResponse = await this.$axios.$post(
+        `${this.$config.serverUrl}/favourites/check`,
+        {
+          userId: this.$store.state.user.currentUser.userId,
+          buildId: this.buildData.id,
+          token: localStorage.getItem("auth"),
+        }
+      );
+      if (favouriteCheckResponse.status === "Failure") {
+        throw new Error(
+          `Error determining if the build is favourited. Error: ${favouriteCheckResponse.resData}`
+        );
+      } else if (favouriteCheckResponse.status === "Success") {
+        this.buildAlreadyFavourited = favouriteCheckResponse.resData;
+      }
+
       // Success!
       loader.hide();
       this.validBuild = true;
@@ -301,7 +332,32 @@ export default {
         });
       }
     },
-    favouriteThisBuild: function () {},
+    favouriteThisBuild: async function () {
+      let favouriteBuildResponse = await this.$axios.$post(
+        `${this.$config.serverUrl}/favourites`,
+        {
+          userId: this.$store.state.user.currentUser.userId,
+          buildId: this.buildData.id,
+          token: localStorage.getItem("auth"),
+        }
+      );
+      if (favouriteBuildResponse.status === "Failure") {
+        this.$notify({
+          title: "Favourite Error",
+          text: `An error occurred when attempting to favourite: ${favouriteBuildResponse.resData}`,
+          duration: 6000,
+          type: "error",
+        });
+      } else if (favouriteBuildResponse.status === "Success") {
+        this.$notify({
+          title: "Favourite",
+          text: favouriteBuildResponse.resData,
+          duration: 3000,
+          type: "success",
+        });
+        this.buildAlreadyFavourited = true;
+      }
+    },
   },
 };
 </script>
