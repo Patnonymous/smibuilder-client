@@ -118,6 +118,10 @@
 <script>
 // Imports.
 import BuildRow from "../components/Builds/BuildRow.vue";
+/**
+ * @description Favourites page displays builds just like the builds page.
+ * Displays only builds that the user has favourited.
+ */
 export default {
   name: "favourites",
   layout: "default",
