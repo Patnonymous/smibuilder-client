@@ -35,11 +35,13 @@
       v-if="commentsReady"
       class="row justify-content-center row m-2 comment-list-height"
     >
-      <div class="col-8 mh-100 overflow-auto">
+      <div class="col mh-100 overflow-auto border border-primary rounded thick">
         <Comment
+          @commentDeleted="removeCommentFromArray"
           class="bg-light rounded text-dark"
-          v-for="comment in arrayComments"
+          v-for="(comment, index) in arrayComments"
           :key="comment.id"
+          :commentIndex="index"
           :commentData="comment"
         />
       </div>
@@ -117,8 +119,6 @@ export default {
           }
         );
 
-        console.log(addNewCommentResponse);
-
         if (addNewCommentResponse.status === "Failure") {
           this.$notify({
             title: "Comments Error",
@@ -138,6 +138,9 @@ export default {
         }
       }
     },
+    removeCommentFromArray: function (index) {
+      this.arrayComments.splice(index, 1);
+    },
   },
 };
 </script>
@@ -145,5 +148,8 @@ export default {
 <style scoped>
 .comment-list-height {
   height: 80vh;
+}
+.thick {
+  border-width: 5px !important;
 }
 </style>
