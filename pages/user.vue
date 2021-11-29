@@ -32,7 +32,9 @@
           </button>
         </div>
         <div class="col-auto mb-2">
-          <button type="button" class="btn btn-danger">Purge Account</button>
+          <button type="button" class="btn btn-danger" @click="purgeThisUser">
+            Purge Account
+          </button>
         </div>
       </div>
     </div>
@@ -40,17 +42,20 @@
       name="change-password-modal"
       @passwordChanged="closeChangePasswordModal"
     />
+    <ConfirmPurgeModal name="confirm-purge-modal" />
   </div>
 </template>
 
 <script>
 // Imports.
 import ChangePasswordModal from "../components/Modals/ChangePasswordModal.vue";
+import ConfirmPurgeModal from "../components/Modals/ConfirmPurgeModal.vue";
 export default {
   name: "user",
   layout: "default",
   components: {
     ChangePasswordModal,
+    ConfirmPurgeModal,
   },
   data: function () {
     return {
@@ -78,6 +83,9 @@ export default {
     },
     closeChangePasswordModal: function () {
       this.$modal.hide("change-password-modal");
+    },
+    purgeThisUser: function () {
+      this.$modal.show("confirm-purge-modal");
     },
   },
 };
