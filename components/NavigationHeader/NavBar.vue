@@ -54,11 +54,10 @@
           variant="outline-primary"
           class="ml-4"
         >
-          <b-dropdown-item>My Account</b-dropdown-item>
+          <b-dropdown-item @click="changePage('/user')"
+            >My Account</b-dropdown-item
+          >
           <b-dropdown-item @click="logout">Logout</b-dropdown-item>
-          <b-dropdown-divider></b-dropdown-divider>
-          <b-dropdown-item active>Active action</b-dropdown-item>
-          <b-dropdown-item disabled>Disabled action</b-dropdown-item>
         </b-dropdown>
       </div>
     </div>
