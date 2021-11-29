@@ -128,6 +128,11 @@
         </div>
       </div>
     </div>
+
+    <!-- This row holds comments. -->
+    <div class="row m-1 bg bg-secondary text-white">
+      <CommentsWidget :buildId="buildData.id" />
+    </div>
   </div>
 </template>
 
@@ -137,6 +142,7 @@ import GodPanel from "../../components/Gods/GodPanel.vue";
 import GodTagsMain from "../../components/Tags/GodTagsMain.vue";
 import GodAbilitiesMain from "../../components/Abilities/GodAbilitiesMain.vue";
 import BuildItemsMain from "../../components/Builds/BuildItemsMain.vue";
+import CommentsWidget from "../../components/Comments/CommentsWidget.vue";
 export default {
   head: {
     title: "View A Build",
@@ -147,6 +153,7 @@ export default {
     GodTagsMain,
     GodAbilitiesMain,
     BuildItemsMain,
+    CommentsWidget,
   },
   async asyncData({ params }) {
     const buildId = params.buildId;
