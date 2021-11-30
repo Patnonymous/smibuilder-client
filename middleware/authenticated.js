@@ -9,12 +9,12 @@ export default async function ({ app, store, redirect, $axios, $config, $notify 
     console.log(TAG + "Outputting user state: ");
     console.log(store.state.user);
 
-    if (app.$cookieFood.get("auth") == null) { // no token
+    if (app.$cookies.get("auth") == null) { // no token
         console.log("User has no token.");
         return redirect("/login");
     } else {
         console.log("User has token.")
-        const token = app.$cookieFood.get("auth");
+        const token = app.$cookies.get("auth");
 
         try {
             let verifyResponse = await $axios.post(`${$config.serverUrl}/users/verify`, { token: token });
@@ -28,7 +28,7 @@ export default async function ({ app, store, redirect, $axios, $config, $notify 
                     duration: 6000,
                     type: "success",
                 });
-                app.$cookieFood.remove("auth");
+                app.$cookies.remove("auth", { path: "/" });
                 this.$store.commit("user/logOut");
                 return redirect("/login");
             } else if (data.status === "Success") {
