@@ -47,6 +47,8 @@
 </template>
 
 <script>
+// Imports.
+import Cookies from "js-cookie";
 export default {
   name: "login",
   layout: "public",
@@ -96,7 +98,7 @@ export default {
             duration: 3000,
             type: "success",
           });
-          localStorage.setItem("auth", loginResponse.resData.token);
+          Cookies.set("auth", loginResponse.resData.token, { expires: 1 });
           this.$store.commit("user/setUser", loginResponse.resData.userObject);
           this.$router.push({ path: "/builds/search" });
         }

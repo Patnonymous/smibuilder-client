@@ -36,6 +36,8 @@
 </template>
 
 <script>
+// Imports.
+import Cookies from "js-cookie";
 export default {
   name: "ConfirmPurgeModal",
   components: {},
@@ -74,7 +76,7 @@ export default {
         // let purgeResponse = await this.$axios.$post(
         //   `${this.$config.serverUrl}/users/purge`,
         //   {
-        //     token: localStorage.getItem("auth"),
+        //     token: Cookies.get("auth"),
         //     userId: this.$store.state.user.currentUser.userId,
         //     password: password,
         //   }

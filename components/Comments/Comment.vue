@@ -126,6 +126,8 @@
 </template>
 
 <script>
+// Imports.
+import Cookies from "js-cookie";
 export default {
   name: "Comment",
   components: {},
@@ -186,7 +188,7 @@ export default {
         let editResponse = await this.$axios.$post(
           `${this.$config.serverUrl}/comments/edit/${this.commentData.id}`,
           {
-            token: localStorage.getItem("auth"),
+            token: Cookies.get("auth"),
             newCommentText: commentText,
           }
         );
@@ -220,7 +222,7 @@ export default {
         let deleteResponse = await this.$axios.$post(
           `${this.$config.serverUrl}/comments/delete/${this.commentData.id}`,
           {
-            token: localStorage.getItem("auth"),
+            token: Cookies.get("auth"),
           }
         );
         if (deleteResponse.status === "Failure") {
@@ -245,7 +247,7 @@ export default {
       let rateUpResponse = await this.$axios.$post(
         `${this.$config.serverUrl}/comments/rate/${this.commentData.id}`,
         {
-          token: localStorage.getItem("auth"),
+          token: Cookies.get("auth"),
           rateUp: true,
         }
       );
@@ -271,7 +273,7 @@ export default {
       let rateDownResponse = await this.$axios.$post(
         `${this.$config.serverUrl}/comments/rate/${this.commentData.id}`,
         {
-          token: localStorage.getItem("auth"),
+          token: Cookies.get("auth"),
           rateUp: false,
         }
       );

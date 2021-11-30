@@ -113,6 +113,8 @@
 <script>
 // Imports.
 import Comment from "./Comment.vue";
+import Cookies from "js-cookie";
+
 export default {
   name: "CommentsWidget",
   components: {
@@ -207,7 +209,7 @@ export default {
         let addNewCommentResponse = await this.$axios.$post(
           `${this.$config.serverUrl}/comments/${this.buildId}`,
           {
-            token: localStorage.getItem("auth"),
+            token: Cookies.get("auth"),
             userId: this.$store.state.user.currentUser.userId,
             commentText: commentText,
           }

@@ -113,32 +113,38 @@ export default {
         this.errorMessage =
           "The passwords do not match. Please ensure you enter the same password in each field.";
       } else {
-        let registrationResponse = await this.$axios.$post(
-          `${this.$config.serverUrl}/users/register`,
-          {
-            email: userEmail,
-            username: username,
-            password: userPassword,
-          }
-        );
-        if (registrationResponse.status === "Failure") {
-          this.errorMessage = registrationResponse.resData;
-          this.$notify({
-            title: "Registration Error",
-            text: "An error has occurred.",
-            duration: 6000,
-            type: "error",
-          });
-        } else if (registrationResponse.status === "Success") {
-          this.resetForm();
-          this.$notify({
-            title: "Registration",
-            text: "Registration was successful. You may now log in.",
-            duration: 6000,
-            type: "success",
-          });
-          this.$router.push({ path: "/login" });
-        }
+        this.$notify({
+          title: "Registration",
+          text: "Registration is disabled.",
+          duration: 3000,
+          type: "success",
+        });
+        // let registrationResponse = await this.$axios.$post(
+        //   `${this.$config.serverUrl}/users/register`,
+        //   {
+        //     email: userEmail,
+        //     username: username,
+        //     password: userPassword,
+        //   }
+        // );
+        // if (registrationResponse.status === "Failure") {
+        //   this.errorMessage = registrationResponse.resData;
+        //   this.$notify({
+        //     title: "Registration Error",
+        //     text: "An error has occurred.",
+        //     duration: 6000,
+        //     type: "error",
+        //   });
+        // } else if (registrationResponse.status === "Success") {
+        //   this.resetForm();
+        //   this.$notify({
+        //     title: "Registration",
+        //     text: "Registration was successful. You may now log in.",
+        //     duration: 6000,
+        //     type: "success",
+        //   });
+        //   this.$router.push({ path: "/login" });
+        // }
       }
     },
     /**

@@ -1,13 +1,14 @@
+import Cookies from 'js-cookie'
 export default async function ({ store, redirect, $axios, $config, $notify }) {
     const TAG = "\nmiddleware - relogin(), ";
     console.log(TAG + "Outputting user state: ");
     console.log(store.state.user);
 
-    if (localStorage.getItem("auth") === null) { // no token
+    if (Cookies.get("auth") == null) { // no token
         console.log("User has no token.");
     } else {
         console.log("User has token.")
-        const token = localStorage.getItem("auth");
+        const token = Cookies.get("auth");
         try {
             let verifyResponse = await $axios.post(`${$config.serverUrl}/users/verify`, { token: token });
             let data = verifyResponse.data;

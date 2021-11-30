@@ -143,6 +143,7 @@ import GodTagsMain from "../../components/Tags/GodTagsMain.vue";
 import GodAbilitiesMain from "../../components/Abilities/GodAbilitiesMain.vue";
 import BuildItemsMain from "../../components/Builds/BuildItemsMain.vue";
 import CommentsWidget from "../../components/Comments/CommentsWidget.vue";
+import Cookies from "js-cookie";
 export default {
   head: {
     title: "View A Build",
@@ -261,7 +262,7 @@ export default {
         {
           userId: this.$store.state.user.currentUser.userId,
           buildId: this.buildData.id,
-          token: localStorage.getItem("auth"),
+          token: Cookies.get("auth"),
         }
       );
       if (favouriteCheckResponse.status === "Failure") {
@@ -297,7 +298,7 @@ export default {
       let likeBuildResponse = await this.$axios.$post(
         `${this.$config.serverUrl}/builds/like/${this.buildData.id}`,
         {
-          token: localStorage.getItem("auth"),
+          token: Cookies.get("auth"),
         }
       );
       if (likeBuildResponse.status === "Failure") {
@@ -320,7 +321,7 @@ export default {
       let dislikeBuildResponse = await this.$axios.$post(
         `${this.$config.serverUrl}/builds/dislike/${this.buildData.id}`,
         {
-          token: localStorage.getItem("auth"),
+          token: Cookies.get("auth"),
         }
       );
       if (dislikeBuildResponse.status === "Failure") {
@@ -345,7 +346,7 @@ export default {
         {
           userId: this.$store.state.user.currentUser.userId,
           buildId: this.buildData.id,
-          token: localStorage.getItem("auth"),
+          token: Cookies.get("auth"),
         }
       );
       if (favouriteBuildResponse.status === "Failure") {

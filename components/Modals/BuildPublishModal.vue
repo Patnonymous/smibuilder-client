@@ -47,6 +47,8 @@
 </template>
 
 <script>
+// Imports.
+import Cookies from "js-cookie";
 export default {
   name: "BuildPublishModal",
   components: {},
@@ -79,7 +81,7 @@ export default {
       this.errorMessage = null;
       let buildTitle = this.userInputBuildTitle.trim();
       let buildDescription = this.userInputBuildDescription.trim();
-      const token = localStorage.getItem("auth");
+      const token = Cookies.get("auth");
       //let userId = this.$store.state.
 
       // Do some client side error checking.

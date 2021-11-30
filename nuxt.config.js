@@ -1,6 +1,6 @@
-export default {
+module.exports = {
   // Rendering setting
-  ssr: false,
+  //ssr: false,
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
     title: 'Capstone Client',
