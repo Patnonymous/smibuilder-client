@@ -1,4 +1,4 @@
-module.exports = {
+export default {
   // Rendering setting
   //ssr: false,
   // Global page headers: https://go.nuxtjs.dev/config-head
