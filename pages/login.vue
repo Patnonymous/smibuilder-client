@@ -51,6 +51,7 @@
 export default {
   name: "login",
   layout: "public",
+  middleware: ["denyifloggedin"],
   components: {},
   data: function () {
     return {
