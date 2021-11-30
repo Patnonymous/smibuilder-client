@@ -118,7 +118,6 @@
 <script>
 // Imports.
 import BuildRow from "../components/Builds/BuildRow.vue";
-import Cookies from "js-cookie";
 /**
  * @description Favourites page displays builds just like the builds page.
  * Displays only builds that the user has favourited.
@@ -153,7 +152,7 @@ export default {
         `${this.$config.serverUrl}/builds/favourited`,
         {
           userId: this.$store.state.user.currentUser.userId,
-          token: Cookies.get("auth"),
+          token: this.$cookies.get("auth"),
         }
       );
 
@@ -319,7 +318,7 @@ export default {
           `${this.$config.serverUrl}/favourites/remove/all`,
           {
             userId: this.$store.state.user.currentUser.userId,
-            token: Cookies.get("auth"),
+            token: this.$cookies.get("auth"),
           }
         );
         if (removeAllFavouritesResponse.status === "Failure") {

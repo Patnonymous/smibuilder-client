@@ -53,7 +53,6 @@
 
 <script>
 // Imports.
-import Cookies from "js-cookie";
 
 export default {
   name: "ChangePasswordModal",
@@ -106,7 +105,7 @@ export default {
         let changePasswordResponse = await this.$axios.$post(
           `${this.$config.serverUrl}/users/change/password`,
           {
-            token: Cookies.get("auth"),
+            token: this.$cookies.get("auth"),
             userId: this.$store.state.user.currentUser.userId,
             currentPassword: trimmedCurrentPassword,
             newPassword: trimmedNewPassword,

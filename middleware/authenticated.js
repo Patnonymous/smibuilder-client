@@ -4,18 +4,17 @@
  * If it verifies, authorized them.
  * @returns Redirection or nothing.
  */
-import Cookies from 'js-cookie'
-export default async function ({ store, redirect, $axios, $config, $notify }) {
+export default async function ({ app, store, redirect, $axios, $config, $notify }) {
     const TAG = "\nmiddleware - authenticated(), ";
     console.log(TAG + "Outputting user state: ");
     console.log(store.state.user);
 
-    if (Cookies.get("auth") == null) { // no token
+    if (app.$cookieFood.get("auth") == null) { // no token
         console.log("User has no token.");
         return redirect("/login");
     } else {
         console.log("User has token.")
-        const token = Cookies.get("auth");
+        const token = app.$cookieFood.get("auth");
 
         try {
             let verifyResponse = await $axios.post(`${$config.serverUrl}/users/verify`, { token: token });
@@ -29,7 +28,7 @@ export default async function ({ store, redirect, $axios, $config, $notify }) {
                     duration: 6000,
                     type: "success",
                 });
-                Cookies.remove("auth");
+                app.$cookieFood.remove("auth");
                 this.$store.commit("user/logOut");
                 return redirect("/login");
             } else if (data.status === "Success") {

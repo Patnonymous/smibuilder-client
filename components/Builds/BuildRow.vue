@@ -98,7 +98,6 @@
 <script>
 // Imports
 import ItemFrameTiny from "../Items/ItemFrameTiny.vue";
-import Cookies from "js-cookie";
 /**
  * @author Patrick W.
  * @description BuildRow component is the preview for a build, for use in the Builds Search screen.
@@ -137,7 +136,7 @@ export default {
         {
           buildId: this.buildData.id,
           userId: this.$store.state.user.currentUser.userId,
-          token: Cookies.get("auth"),
+          token: this.$cookies.get("auth"),
         }
       );
 

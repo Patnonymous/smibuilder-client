@@ -66,7 +66,6 @@
 
 <script>
 // Imports.
-import Cookies from "js-cookie";
 export default {
   name: "NavBar",
   components: {},
@@ -80,7 +79,7 @@ export default {
       this.$router.push({ path: pageRoute });
     },
     logout: function () {
-      Cookies.remove("auth");
+      this.$cookies.remove("auth", { path: "/" });
       this.$store.commit("user/logOut");
       this.$notify({
         title: "Log out.",

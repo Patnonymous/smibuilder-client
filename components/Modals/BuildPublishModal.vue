@@ -48,7 +48,6 @@
 
 <script>
 // Imports.
-import Cookies from "js-cookie";
 export default {
   name: "BuildPublishModal",
   components: {},
@@ -81,8 +80,7 @@ export default {
       this.errorMessage = null;
       let buildTitle = this.userInputBuildTitle.trim();
       let buildDescription = this.userInputBuildDescription.trim();
-      const token = Cookies.get("auth");
-      //let userId = this.$store.state.
+      const token = this.$cookies.get("auth");
 
       // Do some client side error checking.
       if (!this.$store.state.user.authorized) {

@@ -37,7 +37,6 @@
 
 <script>
 // Imports.
-import Cookies from "js-cookie";
 export default {
   name: "ConfirmPurgeModal",
   components: {},
@@ -67,36 +66,33 @@ export default {
 
       // Continue if no error.
       if (this.errorMessage === null) {
-        this.$notify({
-          title: "Purge",
-          text: "Purge is under construction. Please wait warmly.",
-          duration: 3000,
-          type: "success",
-        });
-        // let purgeResponse = await this.$axios.$post(
-        //   `${this.$config.serverUrl}/users/purge`,
-        //   {
-        //     token: Cookies.get("auth"),
-        //     userId: this.$store.state.user.currentUser.userId,
-        //     password: password,
-        //   }
-        // );
+        let purgeResponse = await this.$axios.$post(
+          `${this.$config.serverUrl}/users/purge`,
+          {
+            token: this.$cookies.get("auth"),
+            userId: this.$store.state.user.currentUser.userId,
+            password: password,
+          }
+        );
 
-        // if (purgeResponse.status === "Failure") {
-        //   this.$notify({
-        //     title: "Purge Error.",
-        //     text: `An error has occurred: ${purgeResponse.resData}`,
-        //     duration: 6000,
-        //     type: "error",
-        //   });
-        // } else if (purgeResponse.status === "Success") {
-        //   this.$notify({
-        //     title: "Purge",
-        //     text: purgeResponse.resData,
-        //     duration: 3000,
-        //     type: "success",
-        //   });
-        // }
+        if (purgeResponse.status === "Failure") {
+          this.$notify({
+            title: "Purge Error.",
+            text: `An error has occurred: ${purgeResponse.resData}`,
+            duration: 6000,
+            type: "error",
+          });
+        } else if (purgeResponse.status === "Success") {
+          this.$notify({
+            title: "Purge",
+            text: purgeResponse.resData,
+            duration: 3000,
+            type: "success",
+          });
+          this.$cookies.remove("auth", { path: "/" });
+          this.$store.commit("user/logOut");
+          this.$router.push({ path: "/builds/search" });
+        }
       }
     },
   },
