@@ -162,6 +162,8 @@ export default {
    * Both results hide the loading overlay when finished.
    */
   mounted: async function () {
+    // Set store page name.
+    this.$store.commit("navigation/changePage", "Create");
     // Show loader
     let loader = this.$loading.show();
     let allGodsResponse = await this.$axios.$get(

@@ -4,7 +4,12 @@
       <ul class="navbar-nav mr-auto">
         <li class="nav-item">
           <button
-            class="btn btn-outline-primary ml-4"
+            class="btn ml-4"
+            :class="{
+              'btn-primary': $store.state.navigation.currentPage === 'Create',
+              'btn-outline-primary':
+                $store.state.navigation.currentPage !== 'Create',
+            }"
             @click="changePage('/create/selector')"
           >
             Create
@@ -12,16 +17,27 @@
         </li>
         <li class="nav-item">
           <button
-            class="btn btn-outline-primary ml-4"
+            class="btn ml-4"
             @click="changePage('/builds/search')"
+            :class="{
+              'btn-primary': $store.state.navigation.currentPage === 'Builds',
+              'btn-outline-primary':
+                $store.state.navigation.currentPage !== 'Builds',
+            }"
           >
             Builds
           </button>
         </li>
         <li v-if="$store.state.user.authorized === true" class="nav-item">
           <button
-            class="btn btn-outline-primary ml-4"
+            class="btn ml-4"
             @click="changePage('/favourites')"
+            :class="{
+              'btn-primary':
+                $store.state.navigation.currentPage === 'Favourites',
+              'btn-outline-primary':
+                $store.state.navigation.currentPage !== 'Favourites',
+            }"
           >
             Favourites
           </button>
@@ -33,7 +49,25 @@
           "
           class="nav-item"
         >
-          <button class="btn btn-outline-primary ml-4">Admin</button>
+          <b-dropdown
+            id="dropdown-1"
+            text="Admin"
+            :variant="adminDropdownVariant"
+            class="ml-4"
+          >
+            <b-dropdown-item @click="changePage('/admin/site-stats')"
+              >Site Stats</b-dropdown-item
+            >
+            <b-dropdown-item @click="changePage('/admin/item-stats')"
+              >Item Stats</b-dropdown-item
+            >
+          </b-dropdown>
+          <!-- <button
+            class="btn btn-outline-primary ml-4"
+            @click="changePage('/admin')"
+          >
+            Admin
+          </button> -->
         </li>
       </ul>
       <div
@@ -41,8 +75,14 @@
         class="form-inline my-2 my-lg-0"
       >
         <button
-          class="btn btn-outline-primary ml-4"
+          class="btn ml-4"
           @click="changePage('/login')"
+          :class="{
+            'btn-primary':
+              $store.state.navigation.currentPage === 'LoginOrRegistration',
+            'btn-outline-primary':
+              $store.state.navigation.currentPage !== 'LoginOrRegistration',
+          }"
         >
           Log In
         </button>
@@ -51,7 +91,7 @@
         <b-dropdown
           id="dropdown-1"
           :text="$store.state.user.currentUser.userName"
-          variant="outline-primary"
+          :variant="userDropdownVariant"
           class="ml-4"
         >
           <b-dropdown-item @click="changePage('/user')"
@@ -72,8 +112,30 @@ export default {
   data: function () {
     return {};
   },
-  mounted: function () {},
-  computed: {},
+  mounted: function () {
+    const TAG = "\nNavBar - mounted(), ";
+    console.log(TAG + "Mounted");
+  },
+  updated: function () {
+    const TAG = "\nNavBar - updated(), ";
+    console.log(TAG + "Updated");
+  },
+  computed: {
+    adminDropdownVariant: function () {
+      if (this.$store.state.navigation.currentPage === "Admin") {
+        return "primary";
+      } else {
+        return "outline-primary";
+      }
+    },
+    userDropdownVariant: function () {
+      if (this.$store.state.navigation.currentPage === "User") {
+        return "primary";
+      } else {
+        return "outline-primary";
+      }
+    },
+  },
   methods: {
     changePage: function (pageRoute) {
       this.$router.push({ path: pageRoute });

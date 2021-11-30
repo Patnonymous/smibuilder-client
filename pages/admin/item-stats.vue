@@ -12,7 +12,10 @@ export default {
   data: function () {
     return {};
   },
-  mounted: function () {},
+  mounted: function () {
+    // Set store page name.
+    this.$store.commit("navigation/changePage", "Admin");
+  },
   computed: {},
   methods: {},
 };

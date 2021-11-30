@@ -68,6 +68,8 @@ export default {
   },
 
   mounted: function () {
+    // Set store page name.
+    this.$store.commit("navigation/changePage", "User");
     this.userName = this.$store.state.user.currentUser.userName;
     this.joinDate = new Date(
       this.$store.state.user.currentUser.createdOn

@@ -60,7 +60,10 @@ export default {
       errorMessage: "",
     };
   },
-  mounted: function () {},
+  mounted: function () {
+    // Set store page name.
+    this.$store.commit("navigation/changePage", "LoginOrRegistration");
+  },
   computed: {},
   methods: {
     submitLogin: async function () {

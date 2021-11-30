@@ -143,6 +143,8 @@ export default {
    * @description Get all the favourited builds for the current user.
    */
   mounted: async function () {
+    // Set store page name.
+    this.$store.commit("navigation/changePage", "Favourites");
     // Setup - start the loading overlay.
     let loader = this.$loading.show();
 

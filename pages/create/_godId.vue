@@ -155,6 +155,8 @@ export default {
    * @description Async mounted function will attempt to get the god from the server.
    */
   mounted: async function () {
+    // Set store page name.
+    this.$store.commit("navigation/changePage", "Create");
     let loader = this.$loading.show();
 
     try {

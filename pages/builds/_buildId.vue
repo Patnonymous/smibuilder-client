@@ -194,6 +194,8 @@ export default {
    * If successful, sets the validBuild bool to true so it will display.
    */
   mounted: async function () {
+    // Set store page name.
+    this.$store.commit("navigation/changePage", "Builds");
     let loader = this.$loading.show();
     try {
       // Get main build data.

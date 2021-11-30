@@ -169,6 +169,8 @@ export default {
    * 3. The name of the build author, using the owner_id associated with the build.
    */
   mounted: async function () {
+    // Set store page name.
+    this.$store.commit("navigation/changePage", "Builds");
     // Setup - start the loading overlay.
     let loader = this.$loading.show();
 

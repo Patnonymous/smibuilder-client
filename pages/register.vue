@@ -87,7 +87,10 @@ export default {
       errorMessage: "",
     };
   },
-  mounted: function () {},
+  mounted: function () {
+    // Set store page name.
+    this.$store.commit("navigation/changePage", "LoginOrRegistration");
+  },
   computed: {},
   methods: {
     /**
@@ -113,12 +116,6 @@ export default {
         this.errorMessage =
           "The passwords do not match. Please ensure you enter the same password in each field.";
       } else {
-        // this.$notify({
-        //   title: "Registration",
-        //   text: "Registration is disabled.",
-        //   duration: 3000,
-        //   type: "success",
-        // });
         let registrationResponse = await this.$axios.$post(
           `${this.$config.serverUrl}/users/register`,
           {
