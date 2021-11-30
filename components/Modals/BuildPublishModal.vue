@@ -47,6 +47,7 @@
 </template>
 
 <script>
+// Imports.
 export default {
   name: "BuildPublishModal",
   components: {},
@@ -79,8 +80,7 @@ export default {
       this.errorMessage = null;
       let buildTitle = this.userInputBuildTitle.trim();
       let buildDescription = this.userInputBuildDescription.trim();
-      const token = localStorage.getItem("auth");
-      //let userId = this.$store.state.
+      const token = this.$cookies.get("auth");
 
       // Do some client side error checking.
       if (!this.$store.state.user.authorized) {

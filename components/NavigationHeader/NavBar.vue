@@ -65,6 +65,7 @@
 </template>
 
 <script>
+// Imports.
 export default {
   name: "NavBar",
   components: {},
@@ -78,7 +79,7 @@ export default {
       this.$router.push({ path: pageRoute });
     },
     logout: function () {
-      localStorage.removeItem("auth");
+      this.$cookies.remove("auth", { path: "/" });
       this.$store.commit("user/logOut");
       this.$notify({
         title: "Log out.",

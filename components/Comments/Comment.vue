@@ -25,22 +25,24 @@
       <div class="row">
         <div class="col-auto">
           <div class="row mt-1 mb-1">
-            <div class="col">
+            <div class="col" v-b-tooltip.hover title="Login to rate comments.">
               <button
                 type="button"
                 class="btn btn-outline-success w-100"
                 @click="rateUp"
+                :disabled="!$store.state.user.authorized"
               >
                 Rate Up
               </button>
             </div>
           </div>
           <div class="row mt-1 mb-1">
-            <div class="col">
+            <div class="col" v-b-tooltip.hover title="Login to rate comments.">
               <button
                 type="button"
                 class="btn btn-outline-danger w-100"
                 @click="rateDown"
+                :disabled="!$store.state.user.authorized"
               >
                 Rate Down
               </button>
@@ -126,6 +128,7 @@
 </template>
 
 <script>
+// Imports.
 export default {
   name: "Comment",
   components: {},
@@ -186,7 +189,7 @@ export default {
         let editResponse = await this.$axios.$post(
           `${this.$config.serverUrl}/comments/edit/${this.commentData.id}`,
           {
-            token: localStorage.getItem("auth"),
+            token: this.$cookies.get("auth"),
             newCommentText: commentText,
           }
         );
@@ -220,7 +223,7 @@ export default {
         let deleteResponse = await this.$axios.$post(
           `${this.$config.serverUrl}/comments/delete/${this.commentData.id}`,
           {
-            token: localStorage.getItem("auth"),
+            token: this.$cookies.get("auth"),
           }
         );
         if (deleteResponse.status === "Failure") {
@@ -245,7 +248,7 @@ export default {
       let rateUpResponse = await this.$axios.$post(
         `${this.$config.serverUrl}/comments/rate/${this.commentData.id}`,
         {
-          token: localStorage.getItem("auth"),
+          token: this.$cookies.get("auth"),
           rateUp: true,
         }
       );
@@ -271,7 +274,7 @@ export default {
       let rateDownResponse = await this.$axios.$post(
         `${this.$config.serverUrl}/comments/rate/${this.commentData.id}`,
         {
-          token: localStorage.getItem("auth"),
+          token: this.$cookies.get("auth"),
           rateUp: false,
         }
       );

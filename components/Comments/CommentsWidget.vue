@@ -13,9 +13,16 @@
               rows="3"
               placeholder="Your comment here..."
               maxlength="255"
+              :disabled="!$store.state.user.authorized"
             ></textarea>
-            <small id="smallCommentHelp" class="form-text"
+            <small
+              v-if="$store.state.user.authorized"
+              id="smallCommentHelp"
+              class="form-text"
               >Remember to be nice.</small
+            >
+            <small v-else id="smallCommentHelp" class="form-text"
+              >Have something to say? Login to comment.</small
             >
           </div>
           <div class="form-group">
@@ -23,7 +30,11 @@
               {{ errorMessage }}
             </p>
           </div>
-          <button type="submit" class="btn btn-primary float-right">
+          <button
+            type="submit"
+            class="btn btn-primary float-right"
+            :disabled="!$store.state.user.authorized"
+          >
             Submit New Comment
           </button>
         </form>
@@ -113,6 +124,7 @@
 <script>
 // Imports.
 import Comment from "./Comment.vue";
+
 export default {
   name: "CommentsWidget",
   components: {
@@ -207,7 +219,7 @@ export default {
         let addNewCommentResponse = await this.$axios.$post(
           `${this.$config.serverUrl}/comments/${this.buildId}`,
           {
-            token: localStorage.getItem("auth"),
+            token: this.$cookies.get("auth"),
             userId: this.$store.state.user.currentUser.userId,
             commentText: commentText,
           }

@@ -152,7 +152,7 @@ export default {
         `${this.$config.serverUrl}/builds/favourited`,
         {
           userId: this.$store.state.user.currentUser.userId,
-          token: localStorage.getItem("auth"),
+          token: this.$cookies.get("auth"),
         }
       );
 
@@ -318,7 +318,7 @@ export default {
           `${this.$config.serverUrl}/favourites/remove/all`,
           {
             userId: this.$store.state.user.currentUser.userId,
-            token: localStorage.getItem("auth"),
+            token: this.$cookies.get("auth"),
           }
         );
         if (removeAllFavouritesResponse.status === "Failure") {

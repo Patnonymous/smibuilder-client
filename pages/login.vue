@@ -47,9 +47,11 @@
 </template>
 
 <script>
+// Imports.
 export default {
   name: "login",
   layout: "public",
+  middleware: ["denyifloggedin"],
   components: {},
   data: function () {
     return {
@@ -96,7 +98,10 @@ export default {
             duration: 3000,
             type: "success",
           });
-          localStorage.setItem("auth", loginResponse.resData.token);
+          this.$cookies.set("auth", loginResponse.resData.token, {
+            path: "/",
+            maxAge: 60 * 60 * 12,
+          });
           this.$store.commit("user/setUser", loginResponse.resData.userObject);
           this.$router.push({ path: "/builds/search" });
         }

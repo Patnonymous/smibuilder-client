@@ -52,6 +52,8 @@
 </template>
 
 <script>
+// Imports.
+
 export default {
   name: "ChangePasswordModal",
   components: {},
@@ -103,7 +105,7 @@ export default {
         let changePasswordResponse = await this.$axios.$post(
           `${this.$config.serverUrl}/users/change/password`,
           {
-            token: localStorage.getItem("auth"),
+            token: this.$cookies.get("auth"),
             userId: this.$store.state.user.currentUser.userId,
             currentPassword: trimmedCurrentPassword,
             newPassword: trimmedNewPassword,

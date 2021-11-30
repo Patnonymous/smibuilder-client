@@ -5,34 +5,49 @@
       <!-- Left Side Col is rating and favourite buttons. -->
       <div class="col-2">
         <div class="row m-2">
-          <div class="col">
+          <div
+            class="col"
+            v-b-tooltip.hover
+            title="Please login to rate and favourite."
+          >
             <button
               class="btn btn-outline-success w-100"
               type="button"
               @click="likeThisBuild"
+              :disabled="!$store.state.user.authorized"
             >
               Like
             </button>
           </div>
         </div>
         <div class="row m-2">
-          <div class="col">
+          <div
+            class="col"
+            v-b-tooltip.hover
+            title="Please login to rate and favourite."
+          >
             <button
               class="btn btn-outline-danger w-100"
               type="button"
               @click="dislikeThisBuild"
+              :disabled="!$store.state.user.authorized"
             >
               Dislike
             </button>
           </div>
         </div>
         <div class="row m-2">
-          <div class="col">
+          <div
+            class="col"
+            v-b-tooltip.hover
+            title="Please login to rate and favourite."
+          >
             <button
               v-if="!buildAlreadyFavourited"
               class="btn btn-outline-primary w-100"
               type="button"
               @click="favouriteThisBuild"
+              :disabled="!$store.state.user.authorized"
             >
               Favourite
             </button>
@@ -256,20 +271,20 @@ export default {
       }
 
       // Check if the user has already favourited this build.
-      let favouriteCheckResponse = await this.$axios.$post(
-        `${this.$config.serverUrl}/favourites/check`,
-        {
-          userId: this.$store.state.user.currentUser.userId,
-          buildId: this.buildData.id,
-          token: localStorage.getItem("auth"),
-        }
-      );
-      if (favouriteCheckResponse.status === "Failure") {
-        throw new Error(
-          `Error determining if the build is favourited. Error: ${favouriteCheckResponse.resData}`
+      if (this.$store.state.user.authorized) {
+        let favouriteCheckResponse = await this.$axios.$post(
+          `${this.$config.serverUrl}/favourites/check`,
+          {
+            userId: this.$store.state.user.currentUser.userId,
+            buildId: this.buildData.id,
+            token: this.$cookies.get("auth"),
+          }
         );
-      } else if (favouriteCheckResponse.status === "Success") {
-        this.buildAlreadyFavourited = favouriteCheckResponse.resData;
+        if (favouriteCheckResponse.status === "Failure") {
+          this.buildAlreadyFavourited = false;
+        } else if (favouriteCheckResponse.status === "Success") {
+          this.buildAlreadyFavourited = favouriteCheckResponse.resData;
+        }
       }
 
       // Success!
@@ -297,7 +312,7 @@ export default {
       let likeBuildResponse = await this.$axios.$post(
         `${this.$config.serverUrl}/builds/like/${this.buildData.id}`,
         {
-          token: localStorage.getItem("auth"),
+          token: this.$cookies.get("auth"),
         }
       );
       if (likeBuildResponse.status === "Failure") {
@@ -320,7 +335,7 @@ export default {
       let dislikeBuildResponse = await this.$axios.$post(
         `${this.$config.serverUrl}/builds/dislike/${this.buildData.id}`,
         {
-          token: localStorage.getItem("auth"),
+          token: this.$cookies.get("auth"),
         }
       );
       if (dislikeBuildResponse.status === "Failure") {
@@ -345,7 +360,7 @@ export default {
         {
           userId: this.$store.state.user.currentUser.userId,
           buildId: this.buildData.id,
-          token: localStorage.getItem("auth"),
+          token: this.$cookies.get("auth"),
         }
       );
       if (favouriteBuildResponse.status === "Failure") {

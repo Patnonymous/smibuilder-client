@@ -103,18 +103,6 @@
         </div>
       </div>
     </div>
-
-    <!-- Error container shows if validGod is false -->
-    <div v-else class="container">
-      <div class="row">
-        <div class="col">
-          <h2>
-            An error occurred. God with the ID {{ godId }} may not exist. Check
-            your query.
-          </h2>
-        </div>
-      </div>
-    </div>
     <BuildPublishModal
       name="build-publish-modal"
       :itemIds="equippedItemIds"

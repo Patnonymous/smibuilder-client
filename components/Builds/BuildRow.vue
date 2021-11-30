@@ -136,7 +136,7 @@ export default {
         {
           buildId: this.buildData.id,
           userId: this.$store.state.user.currentUser.userId,
-          token: localStorage.getItem("auth"),
+          token: this.$cookies.get("auth"),
         }
       );
 
