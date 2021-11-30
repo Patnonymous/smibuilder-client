@@ -25,22 +25,24 @@
       <div class="row">
         <div class="col-auto">
           <div class="row mt-1 mb-1">
-            <div class="col">
+            <div class="col" v-b-tooltip.hover title="Login to rate comments.">
               <button
                 type="button"
                 class="btn btn-outline-success w-100"
                 @click="rateUp"
+                :disabled="!$store.state.user.authorized"
               >
                 Rate Up
               </button>
             </div>
           </div>
           <div class="row mt-1 mb-1">
-            <div class="col">
+            <div class="col" v-b-tooltip.hover title="Login to rate comments.">
               <button
                 type="button"
                 class="btn btn-outline-danger w-100"
                 @click="rateDown"
+                :disabled="!$store.state.user.authorized"
               >
                 Rate Down
               </button>
