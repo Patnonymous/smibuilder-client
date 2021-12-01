@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container-fluid">
     <div>
       <!-- Page header and date. -->
       <div class="row">
@@ -22,7 +22,19 @@
       </div>
       <div class="row">
         <div class="col">
-          <canvas ref="refChartCanvas"></canvas>
+          <canvas ref="refChartUserStatsCanvas"></canvas>
+        </div>
+      </div>
+
+      <!-- Most Popular Pages -->
+      <div class="row">
+        <div class="col-auto">
+          <h2>Most Popular Pages:</h2>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <canvas ref="refChartRouteStatsCanvas"></canvas>
         </div>
       </div>
 
@@ -91,19 +103,25 @@ export default {
       this.siteStatsObject.lastTwentyFiveRequests.reverse();
 
       // User Stats.
-      // Array of users.
       let arrayUserNames = [];
       let arrayUserHits = [];
       for (const user in this.siteStatsObject.userStats) {
         arrayUserNames.push(this.siteStatsObject.userStats[user].userName);
         arrayUserHits.push(this.siteStatsObject.userStats[user].numberOfHits);
       }
-      console.log("arrayUserNames: ", arrayUserNames);
-      console.log("arrayUserHits: ", arrayUserHits);
+      // Route stats.
+      let arrayRouteNames = [];
+      let arrayRouteHits = [];
+      for (const route in this.siteStatsObject.routeStats) {
+        arrayRouteNames.push(route);
+        arrayRouteHits.push(
+          this.siteStatsObject.routeStats[route].numberOfHits
+        );
+      }
 
-      // Set up chart.
-      const ctx = this.$refs.refChartCanvas;
-      const usersChart = new Chart(ctx, {
+      // Set up users chart.
+      const usersCtx = this.$refs.refChartUserStatsCanvas;
+      const usersChart = new Chart(usersCtx, {
         type: "bar",
         data: {
           labels: arrayUserNames,
@@ -111,6 +129,45 @@ export default {
             {
               label: "Number of Hits",
               data: arrayUserHits,
+              backgroundColor: [
+                "rgba(255, 99, 132, 0.2)",
+                "rgba(54, 162, 235, 0.2)",
+                "rgba(255, 206, 86, 0.2)",
+                "rgba(75, 192, 192, 0.2)",
+                "rgba(153, 102, 255, 0.2)",
+                "rgba(255, 159, 64, 0.2)",
+              ],
+              borderColor: [
+                "rgba(255, 99, 132, 1)",
+                "rgba(54, 162, 235, 1)",
+                "rgba(255, 206, 86, 1)",
+                "rgba(75, 192, 192, 1)",
+                "rgba(153, 102, 255, 1)",
+                "rgba(255, 159, 64, 1)",
+              ],
+              borderWidth: 1,
+            },
+          ],
+        },
+        options: {
+          scales: {
+            y: {
+              beginAtZero: true,
+            },
+          },
+        },
+      });
+
+      // Set up routes chart.
+      const routesCtx = this.$refs.refChartRouteStatsCanvas;
+      const routesChart = new Chart(routesCtx, {
+        type: "bar",
+        data: {
+          labels: arrayRouteNames,
+          datasets: [
+            {
+              label: "Number of Hits",
+              data: arrayRouteHits,
               backgroundColor: [
                 "rgba(255, 99, 132, 0.2)",
                 "rgba(54, 162, 235, 0.2)",
