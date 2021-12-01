@@ -1,4 +1,4 @@
-export default async function ({ app, store, redirect, $axios, $config, $notify, }) {
+export default async function ({ app, store, redirect, $axios, $config, }) {
     const TAG = "\nmiddleware - relogin(), ";
     console.log(TAG + "Outputting user state: ");
     console.log(store.state.user);
@@ -9,7 +9,8 @@ export default async function ({ app, store, redirect, $axios, $config, $notify,
         console.log("User has token.")
         const token = app.$cookies.get("auth");
         try {
-            let verifyResponse = await $axios.post(`${$config.serverUrl}/users/verify`, { token: token });
+            console.log("Getting verifyResponse");
+            let verifyResponse = await $axios.post(`${process.env.SERVER_URL}/users/verify`, { token: token });
             let data = verifyResponse.data;
             if (data.status === "Failure") {
                 console.log("Not verified. Cant relogin.");
@@ -19,7 +20,7 @@ export default async function ({ app, store, redirect, $axios, $config, $notify,
             }
         } catch (error) {
             console.log(TAG + "Error catched on verify: ");
-            console.log(error.message);
+            console.error(error);
         }
     };
 };
