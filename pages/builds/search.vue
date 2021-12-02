@@ -3,7 +3,7 @@
     <!-- Main outer row contains both columns. -->
     <div class="row ml-4 mr-4">
       <!-- First column is filter column. -->
-      <div class="col-3 p-4 border border-primary">
+      <div class="col-3 p-4">
         <!-- Filters Header -->
         <div class="row justify-content-center">
           <div class="col-auto text-center">
@@ -30,15 +30,16 @@
       </div>
 
       <!-- Second col is character section -->
-      <div class="col border border-secondary">
+      <div class="col">
         <!-- First inner row is the search bar -->
         <div class="row p-2">
           <div class="col">
             <input
               v-model="userSearchTerm"
+              @keyup="debounceSearchStringChanged"
               type="text"
               class="form-control"
-              placeholder="Search by title and god name..."
+              placeholder="Search by build title..."
             />
           </div>
           <div class="col-3">
@@ -48,6 +49,7 @@
               :text="currentSortType"
               variant="outline-primary"
               class="ml-4"
+              :disabled="totalNumberOfPages === 0"
             >
               <b-dropdown-item @click="changeSort('Date Added')"
                 >Date Added</b-dropdown-item
@@ -66,10 +68,11 @@
             <!-- These two buttons toggle Ascending or Descending sort. -->
             <button
               v-if="sortAscending"
-              @click="sortAscending = false"
+              @click="changeAscending(false)"
               title="Ascending"
               type="button"
               class="btn btn-primary"
+              :disabled="totalNumberOfPages === 0"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -86,10 +89,11 @@
             </button>
             <button
               v-else
-              @click="sortAscending = true"
+              @click="changeAscending(true)"
               title="Descending"
               type="button"
               class="btn btn-primary"
+              :disabled="totalNumberOfPages === 0"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -105,6 +109,111 @@
               </svg>
             </button>
           </div>
+
+          <!-- Page controls. -->
+          <div class="col">
+            <span class="text-dark">Page: </span>
+            <!-- First page button. -->
+            <button
+              type="button"
+              class="btn btn-outline-primary"
+              title="First Page"
+              @click="goToFirstPage"
+              :disabled="totalNumberOfPages === 0"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                fill="currentColor"
+                class="bi bi-chevron-double-left"
+                viewBox="0 0 16 16"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M8.354 1.646a.5.5 0 0 1 0 .708L2.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"
+                />
+                <path
+                  fill-rule="evenodd"
+                  d="M12.354 1.646a.5.5 0 0 1 0 .708L6.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"
+                />
+              </svg>
+            </button>
+            <!-- Back 1 page button.  -->
+            <button
+              type="button"
+              class="btn btn-outline-primary"
+              title="Previous Page"
+              @click="decrementPage"
+              :disabled="totalNumberOfPages === 0"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                fill="currentColor"
+                class="bi bi-chevron-left"
+                viewBox="0 0 16 16"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"
+                />
+              </svg>
+            </button>
+            <!-- Current Page -->
+            <button type="button" class="btn btn-primary" disabled>
+              {{ currentPage }}
+            </button>
+            <!-- Forward 1 page button. -->
+            <button
+              type="button"
+              class="btn btn-outline-primary"
+              title="Next Page"
+              @click="incrementPage"
+              :disabled="totalNumberOfPages === 0"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                fill="currentColor"
+                class="bi bi-chevron-right"
+                viewBox="0 0 16 16"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"
+                />
+              </svg>
+            </button>
+            <!-- Last page button. -->
+            <button
+              type="button"
+              class="btn btn-outline-primary"
+              title="Last Page"
+              @click="goToLastPage"
+              :disabled="totalNumberOfPages === 0"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="16"
+                height="16"
+                fill="currentColor"
+                class="bi bi-chevron-double-right"
+                viewBox="0 0 16 16"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M3.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L9.293 8 3.646 2.354a.5.5 0 0 1 0-.708z"
+                />
+                <path
+                  fill-rule="evenodd"
+                  d="M7.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L13.293 8 7.646 2.354a.5.5 0 0 1 0-.708z"
+                />
+              </svg>
+            </button>
+          </div>
         </div>
 
         <!-- Second inner row is the list of build. -->
@@ -113,7 +222,7 @@
             <BuildRow
               @click.native="goToBuild(build)"
               class="build-row-class"
-              v-for="build in filteredBuildsArray"
+              v-for="build in filteredBuilds"
               :key="build.id"
               :buildData="build"
             />
@@ -128,13 +237,11 @@
 // Imports
 import BuildRow from "../../components/Builds/BuildRow.vue";
 import FilterPanel from "../../components/Gods/FilterPanel.vue";
+import _ from "lodash";
 
 /**
- * @author Patrick W.
- * @description The builds - search.vue page will display all the builds.
- * Searching, filtering and sorting are available.
- * The filtering is very basic, as someone on this page does not
- * need access to in depth options like the Create pages selection screen.
+ * @description Displays all the builds.
+ * Paginated at 5 per page.
  */
 export default {
   head: {
@@ -151,195 +258,101 @@ export default {
       allBuilds: [],
       // True when builds loaded and ready.
       buildsReady: false,
-
       // Filter vars.
       userSearchTerm: "",
       arrayBasicFilterStrings: ["My Builds"],
       currentlySelectedFilters: {
         basic: [],
       },
-
       // Sorting vars.
       currentSortType: "Date Added",
       sortAscending: false,
+      // Pagination vars.
+      totalNumberOfPages: 0,
+      currentPage: 0,
     };
   },
-  /**
-   * Get the builds on mounted.
-   * Builds consist of 3 'parts' we need to get.
-   * 1. The build data.
-   * 2. God data for the build, using the god_id associated with the build.
-   * 3. The name of the build author, using the owner_id associated with the build.
-   */
   mounted: async function () {
     // Set store page name.
     this.$store.commit("navigation/changePage", "Builds");
-    // Setup - start the loading overlay.
-    let loader = this.$loading.show();
 
-    try {
-      // Get all the builds.
-      let allBuildsResponse = await this.$axios.$get(
-        `${this.$config.serverUrl}/builds`
-      );
-
-      if (allBuildsResponse.status !== "Success") {
-        throw new Error(allBuildsResponse.resData);
-      }
-
-      // Set data variable.
-      this.allBuilds = allBuildsResponse.resData;
-
-      // Get the builds god data and author name.
-      let index = 0;
-      let aLength = this.allBuilds.length;
-      while (index < aLength) {
-        let godDataResponse = await this.$axios.$get(
-          `${this.$config.serverUrl}/gods/${this.allBuilds[index].godId}`
-        );
-        let getUsernameResponse = await this.$axios.$get(
-          `${this.$config.serverUrl}/users/username/${this.allBuilds[index].ownerId}`
-        );
-
-        if (godDataResponse.status !== "Success") {
-          throw new Error(godDataResponse.resData);
-        } else if (getUsernameResponse.status !== "Success") {
-          throw new Error(getUsernameResponse.resData);
-        }
-
-        // Passed error checking, parse now.
-        this.allBuilds[index].godData = godDataResponse.resData;
-        this.allBuilds[index].ownerName = getUsernameResponse.resData;
-
-        // Get items
-        for (const itemType in this.allBuilds[index].items) {
-          for (const itemSlot in this.allBuilds[index].items[itemType]) {
-            // item slots CAN be null, only try and get slots that are not null.
-            if (this.allBuilds[index].items[itemType][itemSlot]) {
-              let singleItemResponse = await this.$axios.$get(
-                `${this.$config.serverUrl}/items/${this.allBuilds[index].items[itemType][itemSlot]}`
-              );
-              if (singleItemResponse.status !== "Success") {
-                throw new Error(singleItemResponse.resData);
-              } else {
-                // Replace ID with actual item data.
-                this.allBuilds[index].items[itemType][itemSlot] =
-                  singleItemResponse.resData;
-              }
-            }
-          }
-        }
-
-        index++;
-      }
-
-      // Success!
-      loader.hide();
-      this.buildsReady = true;
-    } catch (error) {
-      this.$notify({
-        title: "Builds error.",
-        text: `An error has occurred: ${error.message}`,
-        duration: 6000,
-        type: "error",
-      });
-      loader.hide();
+    // Get Pagination info.
+    let areThereBuilds = await this.getPaginationInfoBuilds();
+    if (areThereBuilds) {
+      this.currentPage = 1;
+      this.getBuildsPaginated();
     }
   },
   computed: {
-    /**
-     * @description Filter the builds according to current filtering, title
-     * and sorting options.
-     */
-    filteredBuildsArray: function () {
-      const SELF = this;
-
-      /**
-       * @description Check if a build should be shown or not.
-       * Defaults to return true, if the build fails any checks
-       * return false.
-       */
-      function showThisBuild(build) {
-        if (SELF.currentlySelectedFilters.basic.length !== 0) {
-          if (
-            SELF.currentlySelectedFilters.basic.includes("My Builds") &&
-            (!SELF.$store.state.user.authorized ||
-              SELF.$store.state.user.currentUser.userId !== build.ownerId)
-          ) {
-            return false;
-          }
+    filteredBuilds: function () {
+      let filteredBuilds = this.allBuilds.filter((build) => {
+        if (
+          this.currentlySelectedFilters.basic.includes("My Builds") &&
+          build.ownerId !== this.$store.state.user.currentUser.userId
+        ) {
+          return false;
         }
-
-        // Passed filter settings, now check against the search bar.
-        if (SELF.userSearchTerm.length !== 0) {
-          let combinedTitle = build.title + " " + build.godData.Name;
-          let regex = new RegExp(SELF.userSearchTerm, "gi");
-          if (!regex.test(combinedTitle)) {
-            return false;
-          }
-        }
-
         return true;
-      }
-
-      // Initial filter.
-      let filteredBuilds = this.allBuilds.filter(showThisBuild);
-      // Sort builds using sorting functions.
-      // a and b are the two builds being compared.
-      if (this.currentSortType === "Date Added") {
-        filteredBuilds = filteredBuilds.sort((a, b) => {
-          if (a.createdDate < b.createdDate) {
-            return 1;
-          } else if (a.createdDate > b.createdDate) {
-            return -1;
-          } else {
-            return 0;
-          }
-        });
-      } else if (this.currentSortType === "Build Title") {
-        filteredBuilds = filteredBuilds.sort((a, b) => {
-          if (a.title.toLowerCase() < b.title.toLowerCase()) {
-            return -1;
-          } else if (a.title.toLowerCase() > b.title.toLowerCase()) {
-            return 1;
-          } else {
-            return 0;
-          }
-        });
-      } else if (this.currentSortType === "Likes") {
-        filteredBuilds = filteredBuilds.sort((a, b) => {
-          if (a.likes < b.likes) {
-            return 1;
-          } else if (a.likes > b.likes) {
-            return -1;
-          } else {
-            return 0;
-          }
-        });
-      } else if (this.currentSortType === "Build") {
-        filteredBuilds = filteredBuilds.sort((a, b) => {
-          if (a.dislikes < b.dislikes) {
-            return 1;
-          } else if (a.dislikes > b.dislikes) {
-            return -1;
-          } else {
-            return 0;
-          }
-        });
-      }
-      // Reverse or not.
-      if (this.sortAscending) {
-        filteredBuilds.reverse();
-      }
+      });
       return filteredBuilds;
     },
   },
   methods: {
+    getPaginationInfoBuilds: async function () {
+      let paginationInfoResponse = await this.$axios.$get(
+        `${this.$config.serverUrl}/builds/pagination-info/${this.userSearchTerm}`
+      );
+      if (paginationInfoResponse.status === "Failure") {
+        this.$notify({
+          title: "Pagination Error",
+          text: `An error has occurred: ${paginationInfoResponse.resData}`,
+          duration: 6000,
+          type: "error",
+        });
+        return false;
+      } else if (paginationInfoResponse.status === "Success") {
+        this.totalNumberOfPages = paginationInfoResponse.resData;
+        if (this.totalNumberOfPages > 0) {
+          return true;
+        } else {
+          return false;
+        }
+      }
+      return false;
+    },
+    getBuildsPaginated: async function () {
+      // Setup - start the loading overlay.
+      let loader = this.$loading.show();
+      let paginatedBuildsResponse = await this.$axios.$get(
+        `${this.$config.serverUrl}/builds/${this.currentPage}/${this.currentSortType}/${this.sortAscending}/${this.userSearchTerm}`
+      );
+
+      if (paginatedBuildsResponse.status === "Failure") {
+        this.$notify({
+          title: "Builds Error",
+          text: `An error has occurred: ${paginatedBuildsResponse.resData}`,
+          duration: 6000,
+          type: "error",
+        });
+        loader.hide();
+      } else if (paginatedBuildsResponse.status === "Success") {
+        this.allBuilds = paginatedBuildsResponse.resData;
+        this.buildsReady = true;
+        loader.hide();
+      }
+    },
     goToBuild: function (build) {
       this.$router.push({ path: `/builds/${build.id}` });
     },
     changeSort: function (sortType) {
       this.currentSortType = sortType;
+      this.currentPage = 1;
+      this.getBuildsPaginated();
+    },
+    changeAscending: function (ascendBool) {
+      this.sortAscending = ascendBool;
+      this.currentPage = 1;
+      this.getBuildsPaginated();
     },
     /**
      * @description This function fires when any of the FilterPanels checkboxes change.
@@ -352,6 +365,54 @@ export default {
     resetAllFilters: function () {
       this.$refs.basicFilterPanel.uncheckAllFilters();
     },
+    /**
+     * @description Sets currentPage to 1.
+     * Does nothing if totalNumberOfPages is 0 (that means no comments).
+     */
+    goToFirstPage: function () {
+      if (this.totalNumberOfPages > 0) {
+        this.currentPage = 1;
+        this.getBuildsPaginated();
+      }
+    },
+    /**
+     * @description Decrements currentPage by 1 if currentPage is greater than 1.
+     */
+    decrementPage: function () {
+      if (this.currentPage > 1) {
+        this.currentPage--;
+        this.getBuildsPaginated();
+      }
+    },
+    /**
+     * @description Increments currentPage by 1 if currentPage is les than totalNumberOfPages.
+     */
+    incrementPage: function () {
+      if (this.currentPage < this.totalNumberOfPages) {
+        this.currentPage++;
+        this.getBuildsPaginated();
+      }
+    },
+    /**
+     * @description Sets currentPage to 1.
+     * Does nothing if totalNumberOfPages is 0 (that means no comments).
+     */
+    goToLastPage: function () {
+      if (this.totalNumberOfPages > 0) {
+        this.currentPage = this.totalNumberOfPages;
+        this.getBuildsPaginated();
+      }
+    },
+    debounceSearchStringChanged: _.debounce(async function (e) {
+      let areThereBuilds = await this.getPaginationInfoBuilds();
+      if (areThereBuilds) {
+        this.currentPage = 1;
+        this.getBuildsPaginated();
+      } else {
+        this.currentPage = 0;
+        this.allBuilds.length = 0;
+      }
+    }, 1000),
   },
 };
 </script>

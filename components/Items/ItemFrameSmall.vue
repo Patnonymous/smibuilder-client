@@ -1,7 +1,7 @@
 <template>
   <div class="m-0 p-0 item-frame-style">
     <div class="col-auto p-1 bg-white rounded">
-      <div class="card border border-danger item-frame-small">
+      <div class="card item-frame-small">
         <img
           v-if="itemData !== null"
           class="card-img-top"

@@ -13,7 +13,7 @@
       <!-- This row will hold the filter and main item search  -->
       <div class="row">
         <!-- This col will hold the filter -->
-        <div class="col-3 p-4 border border-primary">
+        <div class="col-3 p-4 text-dark">
           <!-- Filters Header -->
           <div class="row justify-content-center">
             <div class="col-auto text-center">
@@ -67,7 +67,7 @@
         </div>
 
         <!-- This col will hold the item search -->
-        <div class="col border border-primary">
+        <div class="col">
           <div class="row p-2">
             <div class="col">
               <input
@@ -83,7 +83,7 @@
             <div class="col mh-100 overflow-auto">
               <!-- Each row is a chunk of arrayChunk. -->
               <div
-                class="row mt-1 border border-warning"
+                class="row mt-1"
                 v-for="(chunk, index) in filteredItemsArray"
                 :key="index"
               >
@@ -106,9 +106,9 @@
       </div>
 
       <!-- This row will hold the item tree view and select button -->
-      <div class="row mt-3 border border-secondary">
+      <div class="row mt-3">
         <!-- Item tree col -->
-        <div class="col border border-primary">
+        <div class="col">
           <div class="row">
             <div class="col">
               <ItemTree
@@ -117,7 +117,7 @@
                 :selectedItemId="selectedItem.ItemId"
               />
             </div>
-            <div class="col-5 border border-warning">
+            <div class="col-5">
               <ItemFrameDetailed :itemData="selectedItem" />
               <div class="row" v-if="selectedItem !== null">
                 <div class="col">

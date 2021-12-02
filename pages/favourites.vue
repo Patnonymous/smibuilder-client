@@ -3,7 +3,7 @@
     <!-- Main outer row contains builds. No filters here. -->
     <div class="row ml-4 mr-4">
       <!-- Second col is character section -->
-      <div class="col border border-secondary">
+      <div class="col">
         <!-- First inner row is the search bar -->
         <div class="row p-2">
           <div class="col">

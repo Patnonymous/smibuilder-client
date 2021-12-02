@@ -25,7 +25,7 @@
       <div class="row">
         <div class="col-auto">
           <div class="row mt-1 mb-1">
-            <div class="col" v-b-tooltip.hover title="Login to rate comments.">
+            <div class="col">
               <button
                 type="button"
                 class="btn btn-outline-success w-100"
@@ -37,7 +37,7 @@
             </div>
           </div>
           <div class="row mt-1 mb-1">
-            <div class="col" v-b-tooltip.hover title="Login to rate comments.">
+            <div class="col">
               <button
                 type="button"
                 class="btn btn-outline-danger w-100"

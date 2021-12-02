@@ -5,12 +5,12 @@
       <!-- Greater outer row will hold everything -->
       <div class="row ml-1 mr-1">
         <!-- Left side col will hold the god, their stats, level info etc. -->
-        <div class="col-3 border border-primary">
+        <div class="col-3">
           <GodPanel :godObject="godObject" :godDamageType="godDamageType" />
         </div>
 
         <!-- Right side col will hold the tags, abilities, items, and publish buttons -->
-        <div class="col ml-2 border border-warning">
+        <div class="col ml-2">
           <!-- This row will hold tags -->
           <div class="row bg-secondary text-white justify-content-center">
             <div class="col">

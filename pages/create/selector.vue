@@ -1,9 +1,9 @@
 <template>
-  <div class="container-fluid border border-danger">
+  <div class="container-fluid">
     <!-- Main outer row contains both columns. -->
     <div class="row ml-4 mr-4">
       <!-- First col is filter column -->
-      <div class="col-3 p-4 border border-primary">
+      <div class="col-3 p-4">
         <!-- Filters Header -->
         <div class="row justify-content-center">
           <div class="col-auto text-center">
@@ -53,7 +53,7 @@
       </div>
 
       <!-- Second col is character section -->
-      <div class="col border border-secondary">
+      <div class="col">
         <!-- First inner row is the search bar -->
         <div class="row p-2">
           <div class="col">
@@ -71,7 +71,7 @@
           <div class="col mh-100 overflow-auto">
             <!-- Each row is a chunk of arrayChunk. -->
             <div
-              class="row m-3 border border-warning"
+              class="row m-3"
               v-for="(chunk, index) in filteredGodsArray"
               :key="index"
             >

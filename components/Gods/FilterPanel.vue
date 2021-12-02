@@ -69,20 +69,12 @@
             <!-- Row to contain the checkbox and label -->
             <div class="row justify-content-center bg-white">
               <!-- Column for checkbox -->
-              <div class="col-2 border border-warning">
+              <div class="col-2">
                 <input class="" type="checkbox" id="fooBar" value="fooBar" />
               </div>
               <!-- Column for label -->
-              <div class="col p-0 border border-primary">
-                <label
-                  class="
-                    form-check-label
-                    w-100
-                    text-center
-                    border border-danger
-                  "
-                  for="fooBar"
-                >
+              <div class="col p-0">
+                <label class="form-check-label w-100 text-center" for="fooBar">
                   fooBar
                 </label>
               </div>
