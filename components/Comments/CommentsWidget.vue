@@ -41,7 +41,9 @@
       </div>
     </div>
 
+    <!-- Row for comment controls. -->
     <div class="row p-1 m-2 mb-1 mt-4 bg-light rounded">
+      <!-- Sorting controls. -->
       <div class="col-3">
         <span class="text-dark">Sort: </span>
         <b-dropdown
@@ -49,8 +51,9 @@
           :text="currentSortType"
           variant="primary"
           class="ml-4"
+          :disabled="totalNumberOfPages === 0"
         >
-          <b-dropdown-item @click="changeSort('Date Added')"
+          <b-dropdown-item @click="changeSort('Date')"
             >Date Added</b-dropdown-item
           >
           <b-dropdown-item @click="changeSort('Rating')"
@@ -61,10 +64,11 @@
         <!-- These two buttons toggle Ascending or Descending sort. -->
         <button
           v-if="sortAscending"
-          @click="sortAscending = false"
+          @click="changeAscending(false)"
           title="Ascending"
           type="button"
           class="btn btn-primary"
+          :disabled="totalNumberOfPages === 0"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -81,10 +85,11 @@
         </button>
         <button
           v-else
-          @click="sortAscending = true"
+          @click="changeAscending(true)"
           title="Descending"
           type="button"
           class="btn btn-primary"
+          :disabled="totalNumberOfPages === 0"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -100,6 +105,111 @@
           </svg>
         </button>
       </div>
+
+      <!-- Page controls. -->
+      <div class="col">
+        <span class="text-dark">Page: </span>
+        <!-- First page button. -->
+        <button
+          type="button"
+          class="btn btn-outline-primary"
+          title="First Page"
+          @click="goToFirstPage"
+          :disabled="totalNumberOfPages === 0"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            fill="currentColor"
+            class="bi bi-chevron-double-left"
+            viewBox="0 0 16 16"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M8.354 1.646a.5.5 0 0 1 0 .708L2.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"
+            />
+            <path
+              fill-rule="evenodd"
+              d="M12.354 1.646a.5.5 0 0 1 0 .708L6.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"
+            />
+          </svg>
+        </button>
+        <!-- Back 1 page button.  -->
+        <button
+          type="button"
+          class="btn btn-outline-primary"
+          title="Previous Page"
+          @click="decrementPage"
+          :disabled="totalNumberOfPages === 0"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            fill="currentColor"
+            class="bi bi-chevron-left"
+            viewBox="0 0 16 16"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M11.354 1.646a.5.5 0 0 1 0 .708L5.707 8l5.647 5.646a.5.5 0 0 1-.708.708l-6-6a.5.5 0 0 1 0-.708l6-6a.5.5 0 0 1 .708 0z"
+            />
+          </svg>
+        </button>
+        <!-- Current Page -->
+        <button type="button" class="btn btn-primary" disabled>
+          {{ currentPage }}
+        </button>
+        <!-- Forward 1 page button. -->
+        <button
+          type="button"
+          class="btn btn-outline-primary"
+          title="Next Page"
+          @click="incrementPage"
+          :disabled="totalNumberOfPages === 0"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            fill="currentColor"
+            class="bi bi-chevron-right"
+            viewBox="0 0 16 16"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M4.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L10.293 8 4.646 2.354a.5.5 0 0 1 0-.708z"
+            />
+          </svg>
+        </button>
+        <!-- Last page button. -->
+        <button
+          type="button"
+          class="btn btn-outline-primary"
+          title="Last Page"
+          @click="goToLastPage"
+          :disabled="totalNumberOfPages === 0"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="16"
+            height="16"
+            fill="currentColor"
+            class="bi bi-chevron-double-right"
+            viewBox="0 0 16 16"
+          >
+            <path
+              fill-rule="evenodd"
+              d="M3.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L9.293 8 3.646 2.354a.5.5 0 0 1 0-.708z"
+            />
+            <path
+              fill-rule="evenodd"
+              d="M7.646 1.646a.5.5 0 0 1 .708 0l6 6a.5.5 0 0 1 0 .708l-6 6a.5.5 0 0 1-.708-.708L13.293 8 7.646 2.354a.5.5 0 0 1 0-.708z"
+            />
+          </svg>
+        </button>
+      </div>
     </div>
 
     <!-- Row for comments display section. -->
@@ -111,7 +221,7 @@
         <Comment
           @commentDeleted="removeCommentFromArray"
           class="bg-light rounded text-dark"
-          v-for="(comment, index) in filteredComments"
+          v-for="(comment, index) in arrayComments"
           :key="comment.id"
           :commentIndex="index"
           :commentData="comment"
@@ -143,64 +253,69 @@ export default {
       userInputComment: "",
       errorMessage: null,
       // Sorting vars.
-      currentSortType: "Date Added",
+      currentSortType: "Date",
       sortAscending: false,
+      // Pagination vars.
+      totalNumberOfPages: 0,
+      currentPage: 0,
     };
   },
   mounted: async function () {
-    this.getAllComments();
+    let areThereComments = await this.getCommentsPaginationInfo();
+    if (areThereComments) {
+      this.currentPage = 1;
+      this.getCommentsPaginated();
+    }
   },
-  computed: {
-    filteredComments: function () {
-      let filteredComments = [];
-      if (this.currentSortType === "Date Added") {
-        filteredComments = this.arrayComments.sort((a, b) => {
-          if (a.createdOn < b.createdOn) {
-            return 1;
-          } else if (a.createdOn > b.createdOn) {
-            return -1;
-          } else {
-            return 0;
-          }
-        });
-      } else if (this.currentSortType === "Rating") {
-        filteredComments = this.arrayComments.sort((a, b) => {
-          if (a.rating < b.rating) {
-            return 1;
-          } else if (a.rating > b.rating) {
-            return -1;
-          } else {
-            return 0;
-          }
-        });
-      }
-
-      if (this.sortAscending) {
-        filteredComments.reverse();
-      }
-      return filteredComments;
-    },
-  },
+  computed: {},
   methods: {
-    getAllComments: async function () {
-      this.arrayComments.length = 0;
-      this.commentsReady = false;
-
-      let commentsResponse = await this.$axios.$get(
-        `${this.$config.serverUrl}/comments/${this.buildId}`
+    /**
+     * @description Get the total number of pages to use for this comments section.
+     * Returns true if comments should be updated and loaded.
+     * Returns false if no comments
+     */
+    getCommentsPaginationInfo: async function () {
+      let paginationInfoResponse = await this.$axios.$get(
+        `${this.$config.serverUrl}/comments/pagination-info/${this.buildId}`
       );
-      if (commentsResponse.status === "Failure") {
+
+      if (paginationInfoResponse.status === "Failure") {
         this.$notify({
-          title: "Comments Error",
-          text: `An error has occurred: ${commentsResponse.resData}`,
+          title: "Pagination Error",
+          text: `An error has occurred: ${paginationInfoResponse.resData}`,
           duration: 6000,
           type: "error",
         });
-      } else if (commentsResponse.status === "Success") {
-        this.arrayComments = commentsResponse.resData;
+      } else if (paginationInfoResponse.status === "Success") {
+        this.totalNumberOfPages = paginationInfoResponse.resData;
+        if (this.totalNumberOfPages > 0) {
+          return true;
+        } else {
+          return false;
+        }
+      }
+      return false;
+    },
+    getCommentsPaginated: async function () {
+      let paginatedCommentsResponse = await this.$axios.$get(
+        `${this.$config.serverUrl}/comments/${this.buildId}/${this.currentPage}/${this.currentSortType}/${this.sortAscending}`
+      );
+
+      if (paginatedCommentsResponse.status === "Failure") {
+        this.$notify({
+          title: "Comments Error",
+          text: `An error has occurred: ${paginatedCommentsResponse.resData}`,
+          duration: 6000,
+          type: "error",
+        });
+      } else if (paginatedCommentsResponse.status === "Success") {
+        this.arrayComments = paginatedCommentsResponse.resData;
         this.commentsReady = true;
       }
     },
+    /**
+     * @description Submit a new comment.
+     */
     submitNewComment: async function () {
       this.errorMessage = null;
       // Trim.
@@ -239,15 +354,79 @@ export default {
             duration: 3000,
             type: "success",
           });
-          this.getAllComments();
+          // Get new pagination info and set comments.
+          let areThereComments = await this.getCommentsPaginationInfo();
+          if (areThereComments) {
+            this.currentPage = 1;
+            this.getCommentsPaginated();
+          } else {
+            this.currentPage = 0;
+            this.arrayComments.length = 0;
+          }
         }
       }
     },
-    removeCommentFromArray: function (index) {
-      this.arrayComments.splice(index, 1);
+    /**
+     * @description Called whena  comment is removed.
+     * Updates data accordingly.
+     */
+    removeCommentFromArray: async function (index) {
+      let areThereComments = await this.getCommentsPaginationInfo();
+      if (areThereComments) {
+        this.currentPage = 1;
+        this.getCommentsPaginated();
+      } else {
+        this.currentPage = 0;
+        this.arrayComments.length = 0;
+      }
     },
     changeSort: function (sortType) {
       this.currentSortType = sortType;
+      this.currentPage = 1;
+      this.getCommentsPaginated();
+    },
+    changeAscending: function (ascendBool) {
+      this.sortAscending = ascendBool;
+      this.currentPage = 1;
+      this.getCommentsPaginated();
+    },
+    /**
+     * @description Sets currentPage to 1.
+     * Does nothing if totalNumberOfPages is 0 (that means no comments).
+     */
+    goToFirstPage: function () {
+      if (this.totalNumberOfPages > 0) {
+        this.currentPage = 1;
+        this.getCommentsPaginated();
+      }
+    },
+    /**
+     * @description Decrements currentPage by 1 if currentPage is greater than 1.
+     */
+    decrementPage: function () {
+      if (this.currentPage > 1) {
+        this.currentPage--;
+        this.getCommentsPaginated();
+      }
+    },
+    /**
+     * @description Increments currentPage by 1 if currentPage is les than totalNumberOfPages.
+     */
+    incrementPage: function () {
+      if (this.currentPage < this.totalNumberOfPages) {
+        this.currentPage++;
+        this.getCommentsPaginated();
+      }
+    },
+    /**
+     * @description Sets currentPage to 1.
+     * Does nothing if totalNumberOfPages is 0 (that means no comments).
+     */
+    goToLastPage: function () {
+      if (this.totalNumberOfPages > 0) {
+        this.currentPage = this.totalNumberOfPages;
+        this.getCommentsPaginated();
+      }
     },
   },
 };
