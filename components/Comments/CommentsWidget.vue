@@ -286,6 +286,7 @@ export default {
           duration: 6000,
           type: "error",
         });
+        return false;
       } else if (paginationInfoResponse.status === "Success") {
         this.totalNumberOfPages = paginationInfoResponse.resData;
         if (this.totalNumberOfPages > 0) {
