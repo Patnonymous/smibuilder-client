@@ -190,49 +190,6 @@ export default {
       // Set data variable.
       this.allBuilds = allBuildsResponse.resData;
 
-      // Get the builds god data and author name.
-      let index = 0;
-      let aLength = this.allBuilds.length;
-      while (index < aLength) {
-        let godDataResponse = await this.$axios.$get(
-          `${this.$config.serverUrl}/gods/${this.allBuilds[index].godId}`
-        );
-        let getUsernameResponse = await this.$axios.$get(
-          `${this.$config.serverUrl}/users/username/${this.allBuilds[index].ownerId}`
-        );
-
-        if (godDataResponse.status !== "Success") {
-          throw new Error(godDataResponse.resData);
-        } else if (getUsernameResponse.status !== "Success") {
-          throw new Error(getUsernameResponse.resData);
-        }
-
-        // Passed error checking, parse now.
-        this.allBuilds[index].godData = godDataResponse.resData;
-        this.allBuilds[index].ownerName = getUsernameResponse.resData;
-
-        // Get items
-        for (const itemType in this.allBuilds[index].items) {
-          for (const itemSlot in this.allBuilds[index].items[itemType]) {
-            // item slots CAN be null, only try and get slots that are not null.
-            if (this.allBuilds[index].items[itemType][itemSlot]) {
-              let singleItemResponse = await this.$axios.$get(
-                `${this.$config.serverUrl}/items/${this.allBuilds[index].items[itemType][itemSlot]}`
-              );
-              if (singleItemResponse.status !== "Success") {
-                throw new Error(singleItemResponse.resData);
-              } else {
-                // Replace ID with actual item data.
-                this.allBuilds[index].items[itemType][itemSlot] =
-                  singleItemResponse.resData;
-              }
-            }
-          }
-        }
-
-        index++;
-      }
-
       // Success!
       loader.hide();
       this.buildsReady = true;
