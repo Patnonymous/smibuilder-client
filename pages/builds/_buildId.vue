@@ -5,11 +5,7 @@
       <!-- Left Side Col is rating and favourite buttons. -->
       <div class="col-2">
         <div class="row m-2">
-          <div
-            class="col"
-            v-b-tooltip.hover
-            title="Please login to rate and favourite."
-          >
+          <div class="col" v-b-tooltip.hover :title="ratingButtonTooltipString">
             <button
               class="btn btn-outline-success w-100"
               type="button"
@@ -21,11 +17,7 @@
           </div>
         </div>
         <div class="row m-2">
-          <div
-            class="col"
-            v-b-tooltip.hover
-            title="Please login to rate and favourite."
-          >
+          <div class="col" v-b-tooltip.hover :title="ratingButtonTooltipString">
             <button
               class="btn btn-outline-danger w-100"
               type="button"
@@ -40,7 +32,7 @@
           <div
             class="col"
             v-b-tooltip.hover
-            title="Please login to rate and favourite."
+            :title="favouriteButtonTooltipString"
           >
             <button
               v-if="!buildAlreadyFavourited"
@@ -208,25 +200,6 @@ export default {
       // Set build data.
       this.buildData = getBuildResponse.resData;
 
-      // Get god data.
-      let godDataResponse = await this.$axios.$get(
-        `${this.$config.serverUrl}/gods/${this.buildData.godId}`
-      );
-      // Get owner name.
-      let getUsernameResponse = await this.$axios.$get(
-        `${this.$config.serverUrl}/users/username/${this.buildData.ownerId}`
-      );
-
-      // Error check.
-      if (godDataResponse.status !== "Success") {
-        throw new Error(godDataResponse.resData);
-      } else if (getUsernameResponse.status !== "Success") {
-        throw new Error(getUsernameResponse.resData);
-      }
-
-      // Good data.
-      this.buildData.godData = godDataResponse.resData;
-      this.buildData.ownerName = getUsernameResponse.resData;
       // Have to set god basic attack type and damage type.
       /**
        * For some reason Persephone's basic attack type isn't specified in the api JSON.
@@ -250,25 +223,6 @@ export default {
           this.godDamageType = "Physical";
         } else if (splitted[splittedIndex] === "Magical") {
           this.godDamageType = "Magical";
-        }
-      }
-
-      // Get the items data.
-      for (const itemType in this.buildData.items) {
-        for (const itemSlot in this.buildData.items[itemType]) {
-          // item slots CAN be null, only try and get slots that are not null.
-          if (this.buildData.items[itemType][itemSlot]) {
-            let singleItemResponse = await this.$axios.$get(
-              `${this.$config.serverUrl}/items/${this.buildData.items[itemType][itemSlot]}`
-            );
-            if (singleItemResponse.status !== "Success") {
-              throw new Error(singleItemResponse.resData);
-            } else {
-              // Replace ID with actual item data.
-              this.buildData.items[itemType][itemSlot] =
-                singleItemResponse.resData;
-            }
-          }
         }
       }
 
@@ -305,6 +259,22 @@ export default {
   computed: {
     displayDatePretty: function () {
       return new Date(this.buildData.createdDate).toUTCString();
+    },
+    favouriteButtonTooltipString: function () {
+      if (!this.$store.state.user.authorized) {
+        return "Please log in to favourite.";
+      } else if (this.buildAlreadyFavourited) {
+        return "You've already favourited this build.";
+      } else {
+        return "Favourite this build.";
+      }
+    },
+    ratingButtonTooltipString: function () {
+      if (!this.$store.state.user.authorized) {
+        return "Please log in to rate builds.";
+      } else {
+        return "Rate this build.";
+      }
     },
   },
   methods: {
