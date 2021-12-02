@@ -75,18 +75,11 @@ export default {
   computed: {},
   methods: {
     submitChangePassword: async function () {
-      const TAG = "\nChangePasswordModal - submitChangePassword(), ";
       this.errorMessage = null;
       // Trim.
       let trimmedCurrentPassword = this.currentPassword.trim();
       let trimmedNewPassword = this.newPassword.trim();
       let trimmedConfirmNewPassword = this.confirmNewPassword.trim();
-
-      // DEBUG.
-      console.log(TAG + "Outputting inputs.");
-      console.log("trimmedCurrentPassword: ", trimmedCurrentPassword);
-      console.log("trimmedNewPassword: ", trimmedNewPassword);
-      console.log("trimmedConfirmNewPassword: ", trimmedConfirmNewPassword);
 
       // Do some client side error checking.
       if (trimmedCurrentPassword.length === 0) {

@@ -2,7 +2,7 @@
   <div class="container">
     <div class="row">
       <div class="col">
-        <h1>Capstone Client Index</h1>
+        <h1>SmiBuilder Index</h1>
       </div>
     </div>
   </div>
@@ -10,18 +10,17 @@
 
 <script>
 export default {
+  head: {
+    title: "Index",
+  },
   components: {},
   data: function () {
-    return {
-      myNumber: 2,
-    };
+    return {};
   },
-  mounted: function () {},
+  mounted: function () {
+    this.$router.push({ path: "/builds/search" });
+  },
   computed: {},
-  methods: {
-    goToOtherPageUsingButton: function () {
-      this.$router.push({ path: "other-page" });
-    },
-  },
+  methods: {},
 };
 </script>

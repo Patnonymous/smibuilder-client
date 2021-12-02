@@ -160,7 +160,7 @@ import BuildItemsMain from "../../components/Builds/BuildItemsMain.vue";
 import CommentsWidget from "../../components/Comments/CommentsWidget.vue";
 export default {
   head: {
-    title: "View A Build",
+    title: "View Build",
   },
   layout: "public",
   components: {
@@ -293,8 +293,6 @@ export default {
       loader.hide();
       this.validBuild = true;
     } catch (error) {
-      console.log("ERROR: ");
-      console.error(error);
       this.$notify({
         title: "Build Error",
         text: `An error has occurred: ${error.message}`,

@@ -199,7 +199,6 @@ export default {
       } else if (commentsResponse.status === "Success") {
         this.arrayComments = commentsResponse.resData;
         this.commentsReady = true;
-        console.log(this.arrayComments);
       }
     },
     submitNewComment: async function () {

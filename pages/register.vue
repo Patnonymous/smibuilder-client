@@ -75,6 +75,9 @@
 
 <script>
 export default {
+  head: {
+    title: "Register",
+  },
   name: "register",
   layout: "public",
   components: {},

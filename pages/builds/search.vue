@@ -137,6 +137,9 @@ import FilterPanel from "../../components/Gods/FilterPanel.vue";
  * need access to in depth options like the Create pages selection screen.
  */
 export default {
+  head: {
+    title: "Select a Build",
+  },
   name: "search",
   layout: "public",
   components: {

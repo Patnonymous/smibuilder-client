@@ -202,8 +202,6 @@ export default {
         loader.hide();
       }
     } catch (error) {
-      console.log("ERROR: ");
-      console.error(error);
       this.$notify({
         title: "Create Error",
         text: `An error has occurred: ${error.message}`,

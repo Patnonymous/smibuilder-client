@@ -51,6 +51,9 @@
 import ChangePasswordModal from "../components/Modals/ChangePasswordModal.vue";
 import ConfirmPurgeModal from "../components/Modals/ConfirmPurgeModal.vue";
 export default {
+  head: {
+    title: "User Page",
+  },
   name: "user",
   layout: "default",
   components: {

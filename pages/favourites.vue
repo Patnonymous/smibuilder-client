@@ -123,6 +123,9 @@ import BuildRow from "../components/Builds/BuildRow.vue";
  * Displays only builds that the user has favourited.
  */
 export default {
+  head: {
+    title: "Favourites",
+  },
   name: "favourites",
   layout: "default",
   components: {

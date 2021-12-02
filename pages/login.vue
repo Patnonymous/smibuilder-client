@@ -49,6 +49,9 @@
 <script>
 // Imports.
 export default {
+  head: {
+    title: "Login",
+  },
   name: "login",
   layout: "public",
   middleware: ["redirectIfLoggedIn"],

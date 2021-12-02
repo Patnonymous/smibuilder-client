@@ -112,14 +112,8 @@ export default {
   data: function () {
     return {};
   },
-  mounted: function () {
-    const TAG = "\nNavBar - mounted(), ";
-    console.log(TAG + "Mounted");
-  },
-  updated: function () {
-    const TAG = "\nNavBar - updated(), ";
-    console.log(TAG + "Updated");
-  },
+  mounted: function () {},
+  updated: function () {},
   computed: {
     adminDropdownVariant: function () {
       if (this.$store.state.navigation.currentPage === "Admin") {
