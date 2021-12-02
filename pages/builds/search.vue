@@ -137,6 +137,9 @@ import FilterPanel from "../../components/Gods/FilterPanel.vue";
  * need access to in depth options like the Create pages selection screen.
  */
 export default {
+  head: {
+    title: "Select a Build",
+  },
   name: "search",
   layout: "public",
   components: {
@@ -169,6 +172,8 @@ export default {
    * 3. The name of the build author, using the owner_id associated with the build.
    */
   mounted: async function () {
+    // Set store page name.
+    this.$store.commit("navigation/changePage", "Builds");
     // Setup - start the loading overlay.
     let loader = this.$loading.show();
 

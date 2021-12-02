@@ -160,7 +160,7 @@ import BuildItemsMain from "../../components/Builds/BuildItemsMain.vue";
 import CommentsWidget from "../../components/Comments/CommentsWidget.vue";
 export default {
   head: {
-    title: "View A Build",
+    title: "View Build",
   },
   layout: "public",
   components: {
@@ -194,6 +194,8 @@ export default {
    * If successful, sets the validBuild bool to true so it will display.
    */
   mounted: async function () {
+    // Set store page name.
+    this.$store.commit("navigation/changePage", "Builds");
     let loader = this.$loading.show();
     try {
       // Get main build data.
@@ -291,8 +293,6 @@ export default {
       loader.hide();
       this.validBuild = true;
     } catch (error) {
-      console.log("ERROR: ");
-      console.error(error);
       this.$notify({
         title: "Build Error",
         text: `An error has occurred: ${error.message}`,

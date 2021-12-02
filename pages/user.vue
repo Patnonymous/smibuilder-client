@@ -51,6 +51,9 @@
 import ChangePasswordModal from "../components/Modals/ChangePasswordModal.vue";
 import ConfirmPurgeModal from "../components/Modals/ConfirmPurgeModal.vue";
 export default {
+  head: {
+    title: "User Page",
+  },
   name: "user",
   layout: "default",
   components: {
@@ -68,6 +71,8 @@ export default {
   },
 
   mounted: function () {
+    // Set store page name.
+    this.$store.commit("navigation/changePage", "User");
     this.userName = this.$store.state.user.currentUser.userName;
     this.joinDate = new Date(
       this.$store.state.user.currentUser.createdOn

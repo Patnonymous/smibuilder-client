@@ -127,8 +127,6 @@ export default {
             this.$router.push({ path: "/builds/search" });
           }
         } catch (error) {
-          console.log("ERROR: ");
-          console.error(error);
           this.$notify({
             title: "Build Publish Error",
             text: `An error has occurred: ${error.message}`,

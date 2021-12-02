@@ -2,7 +2,7 @@
   <div class="container bg-secondary rounded">
     <div class="row justify-content-center">
       <div class="col-8">
-        <h4>You're currently a visitor. Log in to access more features.</h4>
+        <h4>Log in to access more features like commenting and favourites.</h4>
         <form class="m-2 p-4" @submit.prevent="submitLogin">
           <div class="form-group">
             <label for="htmlUserInputEmail">Email address</label>
@@ -49,9 +49,12 @@
 <script>
 // Imports.
 export default {
+  head: {
+    title: "Login",
+  },
   name: "login",
   layout: "public",
-  middleware: ["denyifloggedin"],
+  middleware: ["redirectIfLoggedIn"],
   components: {},
   data: function () {
     return {
@@ -60,7 +63,10 @@ export default {
       errorMessage: "",
     };
   },
-  mounted: function () {},
+  mounted: function () {
+    // Set store page name.
+    this.$store.commit("navigation/changePage", "LoginOrRegistration");
+  },
   computed: {},
   methods: {
     submitLogin: async function () {

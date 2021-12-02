@@ -12,7 +12,6 @@ export const state = () => ({
 
 export const mutations = {
     setUser(state, userObject) {
-        const TAG = "STORE user.js - setUser(), ";
         state.authorized = true;
         state.currentUser.userId = userObject.userId
         state.currentUser.userEmail = userObject.userEmail;
@@ -20,9 +19,6 @@ export const mutations = {
         state.currentUser.userType = userObject.userType;
         state.currentUser.createdOn = userObject.createdOn;
         state.currentUser.updatedOn = userObject.updatedOn;
-        console.log(TAG + "Set the user state. Outputting below.");
-        console.log(state.authorized);
-        console.log(state.currentUser);
     },
     logOut(state) {
         state.authorized = false;

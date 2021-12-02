@@ -5,15 +5,10 @@
  * @returns Redirection or nothing.
  */
 export default async function ({ app, store, redirect, $axios, $config, $notify }) {
-    const TAG = "\nmiddleware - authenticated(), ";
-    console.log(TAG + "Outputting user state: ");
-    console.log(store.state.user);
 
     if (app.$cookies.get("auth") == null) { // no token
-        console.log("User has no token.");
         return redirect("/login");
     } else {
-        console.log("User has token.")
         const token = app.$cookies.get("auth");
 
         try {
@@ -35,8 +30,6 @@ export default async function ({ app, store, redirect, $axios, $config, $notify 
                 store.commit("user/setUser", data.resData);
             }
         } catch (error) {
-            console.log("ERROR: ");
-            console.log(error.message);
             return redirect("/login");
         }
     };
