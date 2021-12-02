@@ -3,7 +3,7 @@
     <!-- Main outer row contains both columns. -->
     <div class="row ml-4 mr-4">
       <!-- First column is filter column. -->
-      <div class="col-3 p-4 border border-primary">
+      <div class="col-3 p-4">
         <!-- Filters Header -->
         <div class="row justify-content-center">
           <div class="col-auto text-center">
@@ -30,7 +30,7 @@
       </div>
 
       <!-- Second col is character section -->
-      <div class="col border border-secondary">
+      <div class="col">
         <!-- First inner row is the search bar -->
         <div class="row p-2">
           <div class="col">

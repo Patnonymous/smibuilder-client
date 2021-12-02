@@ -1,8 +1,8 @@
 <template>
   <div>
     <!-- First inner row will hold the card image and basic stats -->
-    <div class="row justify-content-center border border-danger">
-      <div class="col-auto border border-primary">
+    <div class="row justify-content-center">
+      <div class="col-auto">
         <GodCardLarge
           :id="godObject.id"
           :godName="godObject.Name"
@@ -11,7 +11,7 @@
       </div>
 
       <div class="col">
-        <div class="row border">
+        <div class="row">
           <div class="col"><h3 class="align-middle">Level</h3></div>
           <div class="col">
             <input
@@ -74,10 +74,10 @@
     </div>
 
     <!-- Second inner row will hold the advanced stats -->
-    <div class="row justify-content-center border border-warning">
+    <div class="row justify-content-center">
       <div class="col">
         <div class="row">
-          <div class="col border border-danger text-center">
+          <div class="col text-center">
             <h2>Advanced Stats</h2>
           </div>
         </div>
